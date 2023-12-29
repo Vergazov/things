@@ -1,0 +1,36 @@
+CREATE DATABASE IF NOT EXISTS things_are_fine
+    DEFAULT CHARACTER SET utf8
+    DEFAULT COLLATE utf8_general_ci;
+
+USE things_are_fine;
+
+CREATE TABLE IF NOT EXISTS users (
+    id int NOT NULL AUTO_INCREMENT,
+    reg_date DATETIME NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS projects (
+    id int NOT NULL AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    user_id INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS tasks (
+    id int NOT NULL AUTO_INCREMENT,
+    creation_date DATETIME NOT NULL,
+    status BOOLEAN DEFAULT 0,
+    name VARCHAR(255) NOT NULL,
+    file VARCHAR(150),
+    completion_date DATE NOT NULL,
+    user_id INT NOT NULL,
+    project_id INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE RESTRICT ON UPDATE CASCADE
+);
