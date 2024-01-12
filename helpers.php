@@ -13,7 +13,8 @@
  *
  * @return bool true при совпадении с форматом 'ГГГГ-ММ-ДД', иначе false
  */
-function is_date_valid(string $date) : bool {
+function is_date_valid(string $date): bool
+{
     $format_to_check = 'Y-m-d';
     $dateTimeObj = date_create_from_format($format_to_check, $date);
 
@@ -29,7 +30,8 @@ function is_date_valid(string $date) : bool {
  *
  * @return mysqli_stmt Подготовленное выражение
  */
-function db_get_prepare_stmt($link, $sql, $data = []) {
+function db_get_prepare_stmt($link, $sql, $data = [])
+{
     $stmt = mysqli_prepare($link, $sql);
 
     if ($stmt === false) {
@@ -46,11 +48,9 @@ function db_get_prepare_stmt($link, $sql, $data = []) {
 
             if (is_int($value)) {
                 $type = 'i';
-            }
-            else if (is_string($value)) {
+            } else if (is_string($value)) {
                 $type = 's';
-            }
-            else if (is_double($value)) {
+            } else if (is_double($value)) {
                 $type = 'd';
             }
 
@@ -96,9 +96,9 @@ function db_get_prepare_stmt($link, $sql, $data = []) {
  *
  * @return string Рассчитанная форма множественнго числа
  */
-function get_noun_plural_form (int $number, string $one, string $two, string $many): string
+function get_noun_plural_form(int $number, string $one, string $two, string $many): string
 {
-    $number = (int) $number;
+    $number = (int)$number;
     $mod10 = $number % 10;
     $mod100 = $number % 100;
 
@@ -126,7 +126,8 @@ function get_noun_plural_form (int $number, string $one, string $two, string $ma
  * @param array $data Ассоциативный массив с данными для шаблона
  * @return string Итоговый HTML
  */
-function include_template($name, array $data = []) {
+function include_template($name, array $data = [])
+{
     $name = 'templates/' . $name;
     $result = '';
 
@@ -145,14 +146,56 @@ function include_template($name, array $data = []) {
 
 // МОИ
 
-function dd($data) {
+function dd($data)
+{
     echo '<pre>';
-        print_r($data);
+    print_r($data);
     echo '</pre>';
 }
 
-function validateDate($date, $format = 'd.m.Y'): bool
+function validateDate($date, $format = 'Y-m-d'): bool
 {
     $d = DateTime::createFromFormat($format, $date);
     return $d && $d->format($format) === $date;
+}
+
+function countTasksForProject($tasks, $project)
+{
+    $tasksNumber = 0;
+    foreach ($tasks as $task) {
+        if ($project === $task['project']) {
+            $tasksNumber++;
+        }
+    }
+    return $tasksNumber;
+}
+
+function isTaskImportant($date)
+{
+    if (!validateDate($date)) {
+        return false;
+    }
+    $dateDiff = (strtotime($date) - time()) / 3600;
+    if ($dateDiff <= 24) {
+        return true;
+    }
+    return false;
+}
+
+function getQueryCurrentUserProjects(): string
+{
+    return 'SELECT projects.id, projects.name from things_are_fine.projects '
+        . 'JOIN things_are_fine.users '
+        . 'ON projects.user_id = users.id '
+        . 'WHERE users.name = "Илья"';
+}
+
+function getQueryCurrentUserTasks(): string
+{
+    return 'SELECT tasks.name, tasks.completion_date, projects.name project, tasks.status FROM things_are_fine.tasks '
+        . 'JOIN things_are_fine.users '
+        . 'ON  tasks.user_id = users.id '
+        . 'JOIN things_are_fine.projects '
+        . 'ON tasks.project_id = projects.id '
+        . 'WHERE users.name = "Илья"';
 }

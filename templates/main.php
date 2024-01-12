@@ -3,10 +3,10 @@
 
     <nav class="main-navigation">
         <ul class="main-navigation__list">
-            <?php foreach($projects as $project): ?>
-                <li class="main-navigation__list-item">
-                    <a class="main-navigation__list-item-link" href="#"><?=htmlspecialchars($project)?></a>
-                    <span class="main-navigation__list-item-count"><?=countTasksForProject($tasks,$project)?></span>
+            <?php foreach($currentUserProjects as $project): ?>
+                <li class="main-navigation__list-item <?php if($project['id'] === $projectId): ?>main-navigation__list-item--active<?php endif; ?> ">
+                    <a class="main-navigation__list-item-link" href="?id=<?=$project['id']?>"><?=htmlspecialchars($project['name'])?></a>
+                    <span class="main-navigation__list-item-count"><?=countTasksForProject($tasksForCount,$project['name'])?></span>
                 </li>
             <?php endforeach;?>
         </ul>
@@ -34,26 +34,25 @@
         </nav>
 
         <label class="checkbox">
-            <!--добавить сюда атрибут "checked", если переменная $show_complete_tasks равна единице-->
             <input class="checkbox__input visually-hidden show_completed" <?php if($show_complete_tasks === 1): ?>checked<?php endif; ?> type="checkbox">
             <span class="checkbox__text">Показывать выполненные</span>
         </label>
     </div>
 
     <table class="tasks">
-        <?php foreach($tasks as $task): ?>
+        <?php foreach($currentUserTasks as $task): ?>
 
-            <?php if($task[3] && $show_complete_tasks === 0): ?>
+            <?php if($task['status'] && $show_complete_tasks === 0): ?>
                 <?php continue; ?>
             <?php endif; ?>
             <tr class="tasks__item task
-            <?php if($task[3]): ?>task--completed <?php endif; ?>
-            <?php if(isTaskImportant($task[1])): ?>task--important <?php endif; ?>
+            <?php if($task['status']): ?>task--completed <?php endif; ?>
+            <?php if(isTaskImportant($task['completion_date'])): ?>task--important <?php endif; ?>
 ">
                 <td class="task__select">
                     <label class="checkbox task__checkbox">
                         <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1">
-                        <span class="checkbox__text"><?=htmlspecialchars($task[0])?></span>
+                        <span class="checkbox__text"><?=htmlspecialchars($task['name'])?></span>
                     </label>
                 </td>
 
@@ -61,23 +60,11 @@
                     <a class="download-link" href="#">Home.psd</a>
                 </td>
 
-                <td class="task__date"><?=$task[1]?></td>
+                <td class="task__date"><?=$task['completion_date']?></td>
             </tr>
         <?php endforeach; ?>
         <!--показывать следующий тег <tr/>, если переменная $show_complete_tasks равна единице-->
         <?php if($show_complete_tasks === 1): ?>
-            <tr class="tasks__item task task--completed">
-                <td class="task__select">
-                    <label class="checkbox task__checkbox">
-                        <input class="checkbox__input visually-hidden" type="checkbox" checked>
-                        <span class="checkbox__text">Записаться на интенсив "Базовый PHP"</span>
-                    </label>
-                </td>
-                <td class="task__date">10.10.2019</td>
-
-                <td class="task__controls">
-                </td>
-            </tr>
         <?php endif; ?>
     </table>
 </main>
