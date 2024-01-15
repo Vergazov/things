@@ -54,6 +54,7 @@ if(!$con){
             $error = mysqli_error($con);
         }
     }
+
 }
 
 $content = include_template('main.php', [
@@ -63,13 +64,6 @@ $content = include_template('main.php', [
     'projectId' => $projectId,
     'show_complete_tasks' => $show_complete_tasks,
 ]);
-
-if(filter_input(INPUT_GET,'task') !== NULL) {
-    $content = include_template('add.php', [
-        'projects' => $projects,
-        'allTasks' => $allTasks,
-    ]);
-}
 
 $layOut = include_template('layout.php', [
     'titleName' => $titleName,

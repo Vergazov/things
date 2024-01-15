@@ -182,6 +182,14 @@ function isTaskImportant($date)
     return false;
 }
 
+// Запрос для получения списка всех проектов
+function getQueryAllProjects()
+{
+    return 'SELECT * FROM things_are_fine.projects';
+}
+
+// Запрос для получения списка проектов у текущего пользователя
+
 function getQueryCurrentUserProjects(): string
 {
     return 'SELECT projects.id, projects.name from things_are_fine.projects '
@@ -189,6 +197,8 @@ function getQueryCurrentUserProjects(): string
         . 'ON projects.user_id = users.id '
         . 'WHERE users.name = "Илья"';
 }
+
+// Запрос для получения списка из всех задач у текущего пользователя
 
 function getQueryCurrentUserTasks(): string
 {
@@ -198,4 +208,11 @@ function getQueryCurrentUserTasks(): string
         . 'JOIN things_are_fine.projects '
         . 'ON tasks.project_id = projects.id '
         . 'WHERE users.name = "Илья"';
+}
+
+function validateFilled($name)
+{
+    if (empty($_POST[$name])) {
+        return "Это поле должно быть заполнено";
+    }
 }

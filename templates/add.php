@@ -4,10 +4,10 @@
 
         <nav class="main-navigation">
             <ul class="main-navigation__list">
-                <?php foreach($projects as $project): ?>
+                <?php foreach($currentUserProjects as $project): ?>
                     <li class="main-navigation__list-item <?php if($project['id'] === $projectId): ?>main-navigation__list-item--active<?php endif; ?> ">
                         <a class="main-navigation__list-item-link" href="?id=<?=$project['id']?>"><?=htmlspecialchars($project['name'])?></a>
-                        <span class="main-navigation__list-item-count"><?=countTasksForProject($allTasks,$project['name'])?></span>
+                        <span class="main-navigation__list-item-count"><?=countTasksForProject($tasksForCount,$project['name'])?></span>
                     </li>
                 <?php endforeach;?>
             </ul>
@@ -19,7 +19,7 @@
     <main class="content__main">
         <h2 class="content__main-heading">Добавление задачи</h2>
 
-        <form class="form"  action="../index.php" method="post" autocomplete="off">
+        <form class="form"  action="http://localhost:82/things/add.php" method="post" autocomplete="off">
             <div class="form__row">
                 <label class="form__label" for="name">Название <sup>*</sup></label>
 
@@ -30,9 +30,10 @@
                 <label class="form__label" for="project">Проект <sup>*</sup></label>
 
                 <select class="form__input form__input--select" name="project" id="project">
-                    <?php foreach($projects as $project): ?>
-                    <option value="">Входящие</option>
-                    <?php foreach($projects as $project): ?>
+                    <option value=""></option>
+                    <?php foreach($allProjects as $project): ?>
+                        <option value="project"><?=$project['name']?></option>
+                    <?php endforeach; ?>
                 </select>
             </div>
 
