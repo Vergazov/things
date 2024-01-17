@@ -50,7 +50,7 @@ function db_get_prepare_stmt($link, $sql, $data = [])
                 $type = 'i';
             } else if (is_string($value)) {
                 $type = 's';
-            } else if (is_double($value)) {
+            } else if (is_float($value)) {
                 $type = 'd';
             }
 
@@ -126,7 +126,7 @@ function get_noun_plural_form(int $number, string $one, string $two, string $man
  * @param array $data Ассоциативный массив с данными для шаблона
  * @return string Итоговый HTML
  */
-function include_template($name, array $data = [])
+function include_template(string $name, array $data = [])
 {
     $name = 'templates/' . $name;
     $result = '';
@@ -144,8 +144,15 @@ function include_template($name, array $data = [])
     return $result;
 }
 
-// МОИ
+/**
+ * Мои функции
+ */
 
+
+/**
+ * Отладочный вывод. Принимает один параметр который будет выведен на экран
+ * @param $data . Параметр который будет выведен на экран
+ */
 function dd($data)
 {
     echo '<pre>';
@@ -153,13 +160,7 @@ function dd($data)
     echo '</pre>';
 }
 
-function validateDate($date, $format = 'Y-m-d'): bool
-{
-    $d = DateTime::createFromFormat($format, $date);
-    return $d && $d->format($format) === $date;
-}
-
-function countTasksForProject($tasks, $project)
+function countTasksForProject($tasks, $project): int
 {
     $tasksNumber = 0;
     foreach ($tasks as $task) {
@@ -170,9 +171,9 @@ function countTasksForProject($tasks, $project)
     return $tasksNumber;
 }
 
-function isTaskImportant($date)
+function isTaskImportant($date): bool
 {
-    if (!validateDate($date)) {
+    if (!validateDate1($date)) {
         return false;
     }
     $dateDiff = (strtotime($date) - time()) / 3600;
@@ -182,23 +183,35 @@ function isTaskImportant($date)
     return false;
 }
 
+// TODO исправить это
+
+function validateDate1($date, $format = 'Y-m-d'): bool
+{
+    $d = DateTime::createFromFormat($format, $date);
+    return $d && $d->format($format) === $date;
+}
+
 // Запрос для получения списка всех проектов
-function getQueryAllProjects()
+function getQueryAllProjects(): string
 {
     return 'SELECT * FROM things_are_fine.projects';
 }
 
-// Запрос для получения списка проектов у текущего пользователя
+/**
+ * @return string . Запрос для получения списка проектов у текущего пользователя
+ */
 
 function getQueryCurrentUserProjects(): string
 {
     return 'SELECT projects.id, projects.name from things_are_fine.projects '
         . 'JOIN things_are_fine.users '
         . 'ON projects.user_id = users.id '
-        . 'WHERE users.name = "Илья"';
+        . 'WHERE users.name = ?';
 }
 
-// Запрос для получения списка из всех задач у текущего пользователя
+/**
+ * @return string . Запрос для получения списка задач у текущего пользователя
+ */
 
 function getQueryCurrentUserTasks(): string
 {
@@ -207,8 +220,73 @@ function getQueryCurrentUserTasks(): string
         . 'ON  tasks.user_id = users.id '
         . 'JOIN things_are_fine.projects '
         . 'ON tasks.project_id = projects.id '
-        . 'WHERE users.name = "Илья"';
+        . 'WHERE users.name = ?';
 }
+
+/**
+ * @return string . Запрос для получения списка задач отфильтрованных по проекту
+ */
+
+function getQueryFilteredByProjTasks(): string
+{
+    return 'SELECT tasks.name, tasks.completion_date, projects.name project, tasks.status FROM things_are_fine.tasks '
+        . 'JOIN things_are_fine.projects '
+        . 'ON tasks.project_id = projects.id '
+        . 'WHERE project_id = ?';
+}
+
+/**
+ * Получить список данных для текущего пользователя, через подготовленное выражение.
+ * @param $con . Ресурс соединения
+ * @param $data . Данные для вставки в запрос
+ * @param $sql . SQL запрос
+ * @return array|string
+ */
+
+function getCurrentUserData($con, $data, $sql): array|string
+{
+    $stmt = db_get_prepare_stmt($con, $sql, [$data]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if ($result) {
+        return mysqli_fetch_all($result, MYSQLI_ASSOC);
+    }
+
+    return mysqli_error($con);
+}
+
+function getPostVal($name)
+{
+    return $_POST[$name] ?? "";
+}
+
+/**
+ * Функции валидации
+ */
+
+/**
+ * Проверка поля с датой на соответствие формату
+ */
+function validateDate($name, $format = 'Y-m-d'): bool|string|null
+{
+    $date = $_POST[$name];
+    if ($date === '') {
+        return null;
+    }
+    $curDate = date($format);
+    if (strtotime($date) >= strtotime($curDate)) {
+        $rightFormatDate = date_create_from_format($format, $date);
+        if ($rightFormatDate->format($format) === $date) {
+            return null;
+        }
+        return 'Введенная дата не соответствует формату ГГГ-ММ-ДД';
+    }
+    return 'Дата выполнения должна быть больше или равна текущей';
+}
+
+/**
+ * Проверка поля на заполненность
+ */
 
 function validateFilled($name)
 {
@@ -216,3 +294,5 @@ function validateFilled($name)
         return "Это поле должно быть заполнено";
     }
 }
+
+

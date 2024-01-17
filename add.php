@@ -5,12 +5,14 @@ require_once 'init.php';
 
 // Запрос для получения списка всех проектов
 $titleName = 'Дела в порядке';
-$userName = "Илья";
+$currentUser = "Илья";
+
 if(!$con){
     $error = mysqli_connect_error();
 }else {
     // Запрос для получения списка всех проектов
     $sql =  getQueryAllProjects();
+
     $result = mysqli_query($con,$sql);
     if($result){
         $allProjects = mysqli_fetch_all($result,MYSQLI_ASSOC);
@@ -18,23 +20,8 @@ if(!$con){
         $error = mysqli_error($con);
     }
 
-    // Запрос для получения списка проектов у текущего пользователя.
-    $sql =  getQueryCurrentUserProjects();
-    $result = mysqli_query($con,$sql);
-    if($result){
-        $currentUserProjects = mysqli_fetch_all($result,MYSQLI_ASSOC);
-    }else {
-        $error = mysqli_error($con);
-    }
-
-    // Запрос для получения списка из всех задач у текущего пользователя
-    $sql =  getQueryCurrentUserTasks();
-    $result = mysqli_query($con,$sql);
-    if($result){
-        $currentUserTasks = mysqli_fetch_all($result,MYSQLI_ASSOC);
-    }else {
-        $error = mysqli_error($con);
-    }
+    $currentUserProjects = getCurrentUserData($con,$currentUser,getQueryCurrentUserProjects());
+    $currentUserTasks = getCurrentUserData($con,$currentUser,getQueryCurrentUserTasks());
 
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
         $required = ['name', 'project'];
@@ -47,25 +34,38 @@ if(!$con){
             'project' => function($value){
                 return validateFilled($value);
             },
+            'date' => function($value){
+                return validateDate($value);
+            },
         ];
 
-        $task = filter_input_array(INPUT_POST,['name' => FILTER_DEFAULT, 'project' => FILTER_DEFAULT],true);
-
+        $task = filter_input_array(INPUT_POST,['name' => FILTER_DEFAULT, 'project' => FILTER_DEFAULT, 'date' => FILTER_DEFAULT]);
         dd($task);
-
-        foreach ($task as $taskKey => $taskValue) {
-            if(isset($rules[$taskKey])){
-                $rule = $rules[$taskKey];
-                $errors[$taskKey] = $rule($taskValue);
+        var_dump($task);
+        foreach ($task as $key => $value) {
+            if(isset($rules[$key])){
+                $rule = $rules[$key];
+                $errors[$key] = $rule($key);
             }
-
-            if(in_array($taskKey, $required) && empty($taskValue)){
-                $errors[$taskKey] = "Поле $taskKey должно быть заполнено";
+            if(in_array($key, $required, true) && empty($value)){
+                $errors[$key] = "Поле $key должно быть заполнено";
             }
         }
 
+        // Проверка на существование проекта
+        if($task['project'] !== ''){
+            $sql = 'SELECT projects.name FROM things_are_fine.projects WHERE id = ' . $task['project'];
+            $result = mysqli_query($con,$sql);
+            if($result){
+                $currentProj = mysqli_fetch_all($result,MYSQLI_ASSOC);
+                if(empty($currentProj)){
+                    $errors['project'] = 'Такого проекта не существует';
+                }
+            }else {
+                $error = mysqli_error($con);
+            }
+        }
         $errors = array_filter($errors);
-
         dd($errors);
     }
 }
@@ -78,7 +78,7 @@ $content = include_template('add.php', [
 ]);
 $layOut = include_template('layout.php', [
     'titleName' => $titleName,
-    'userName' => $userName,
+    'currentUser' => $currentUser,
     'content' => $content,
 ]);
 print($layOut);

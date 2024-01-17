@@ -5,57 +5,31 @@ require_once 'init.php';
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 $titleName = 'Дела в порядке';
-$userName = "Илья";
+$currentUser = "Илья";
+$currentUserProjects = '';
+$currentUserTasks = '';
+$projectId = '';
+$filteredByProjTasks = '';
+
 if(!$con){
     $error = mysqli_connect_error();
 }else {
 
-    // Запрос для получения списка проектов у текущего пользователя.
-    $sql =  getQueryCurrentUserProjects();
-    $result = mysqli_query($con,$sql);
-    if($result){
-        $currentUserProjects = mysqli_fetch_all($result,MYSQLI_ASSOC);
-    }else {
-        $error = mysqli_error($con);
-    }
-
-    // Запрос для получения списка из всех задач у текущего пользователя
-    $sql =  getQueryCurrentUserTasks();
-    $result = mysqli_query($con,$sql);
-    if($result){
-        $currentUserTasks = mysqli_fetch_all($result,MYSQLI_ASSOC);
-    }else {
-        $error = mysqli_error($con);
-    }
-
-    $projectId = '';
-
-    //Фильтрация задач по проекту
-    if(filter_input(INPUT_GET,'id') !== NULL){
+    $currentUserProjects = getCurrentUserData($con,$currentUser,getQueryCurrentUserProjects());
+    $currentUserTasks = getCurrentUserData($con,$currentUser,getQueryCurrentUserTasks());
+    if(filter_input(INPUT_GET,'id') !== ''){
         $projectId = filter_input(INPUT_GET,'id',FILTER_SANITIZE_NUMBER_INT);
-        $sql = 'SELECT tasks.name, tasks.completion_date, projects.name project, tasks.status FROM things_are_fine.tasks '
-                . 'JOIN things_are_fine.projects '
-                . 'ON tasks.project_id = projects.id '
-                . 'WHERE project_id = ' . $projectId;
+        $filteredByProjTasks = getCurrentUserData($con,$projectId,getQueryFilteredByProjTasks());
 
-        // Проверка на присутствие параметра запроса
-        if(empty(filter_input(INPUT_GET,'id'))){
+        if(empty($filteredByProjTasks)) {
             return http_response_code(404);
         }
-        $result = mysqli_query($con,$sql);
 
-        // Если по ID не найдено ни одной записи
-        if($result->num_rows === 0) {
-            return http_response_code(404);
-        }
-        if($result){
-            $filteredByProjTasks = mysqli_fetch_all($result,MYSQLI_ASSOC);
-        }else {
-            $error = mysqli_error($con);
-        }
+    }else{
+        return http_response_code(404);
     }
-
 }
+// TODO: подумать как доработать. Мне не нравится, что дублируются задачи и не нравится условный оператор в currentUserTasks
 
 $content = include_template('main.php', [
     'currentUserProjects' => $currentUserProjects,
@@ -67,7 +41,7 @@ $content = include_template('main.php', [
 
 $layOut = include_template('layout.php', [
     'titleName' => $titleName,
-    'userName' => $userName,
+    'currentUser' => $currentUser,
     'content' => $content,
 ]);
 print($layOut);

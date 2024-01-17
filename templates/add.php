@@ -21,9 +21,9 @@
 
         <form class="form"  action="http://localhost:82/things/add.php" method="post" autocomplete="off">
             <div class="form__row">
-                <label class="form__label" for="name">Название <sup>*</sup></label>
+                <label class="form__label" for="name" >Название <sup>*</sup></label>
 
-                <input class="form__input" type="text" name="name" id="name" value="" placeholder="Введите название">
+                <input class="form__input" type="text" name="name" id="name" value="<?=getPostVal('name')?>" placeholder="Введите название">
             </div>
 
             <div class="form__row">
@@ -31,8 +31,9 @@
 
                 <select class="form__input form__input--select" name="project" id="project">
                     <option value=""></option>
+                    <option value="10">Хакер</option>
                     <?php foreach($allProjects as $project): ?>
-                        <option value="project"><?=$project['name']?></option>
+                        <option value="<?=$project['id']?>"><?=$project['name']?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
