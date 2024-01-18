@@ -204,6 +204,17 @@ function isTaskImportant($date): bool
 }
 
 /**
+ * Функция для сохранения данных формы, в случае неудачной отправки запроса
+ * @param $name . Ключ по которому в $_POST массиве будем искать данные из формы
+ * @return mixed Данные из $_POST массива по переданному ключу
+ */
+
+function getPostVal($name)
+{
+    return $_POST[$name] ?? "";
+}
+
+/**
  * @return string . Запрос для получения списка проектов у текущего пользователя
  */
 function getQueryCurrentUserProjects(): string
@@ -306,6 +317,12 @@ function validateFilled($name): string|null
     return null;
 }
 
+/**
+ * Проверка существует ли проект. Осуществляется по id проекта в базе
+ * @param $con . Ресурс соединения с БД
+ * @param $name . Название ключа в $_POST массиве, по которому будем искать id проекта
+ * @return string|null Возвращает либо ошибку о том что проекта нету либо null если проект существует
+ */
 function isProjExist($con,$name): string|null
 {
     $projectId = $_POST[$name];

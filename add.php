@@ -17,7 +17,7 @@ if(!$con){
 
     $currentUserProjects = getCurrentUserData($con,$currentUser,getQueryCurrentUserProjects());
     $currentUserTasks = getCurrentUserData($con,$currentUser,getQueryCurrentUserTasks());
-// TODO: Пока сделать полностью ту валидацию что у меня прописана в rules
+
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
         $required = ['name', 'project'];
 
@@ -46,6 +46,7 @@ if(!$con){
         ];
 
         $task = filter_input_array(INPUT_POST,['name' => FILTER_DEFAULT, 'project' => FILTER_DEFAULT, 'date' => FILTER_DEFAULT]);
+
         foreach ($task as $key => $value) {
             if(isset($rules[$key])){
                 $rule = $rules[$key];
@@ -57,6 +58,10 @@ if(!$con){
         }
 
         $errors = array_filter($errors);
+
+        $file_name = $_FILES['file']['name'];
+        $file_path = __DIR__ . '/uploads/';
+        move_uploaded_file($_FILES['file']['tmp_name'], $file_path . $file_name);
     }
 }
 
