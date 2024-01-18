@@ -75,6 +75,25 @@ function db_get_prepare_stmt($link, $sql, $data = [])
 }
 
 /**
+ * Выполняет подготовленное выражение. Будет работать если в подготовленном выражении есть только 1 плейсхолдер.
+ * @param $con . Ресурс соединения
+ * @param $data . Данные для вставки в запрос
+ * @param $sql . SQL запрос
+ * @return array|string
+ */
+function getCurrentUserData($con, $data, $sql): array|string
+{
+    $stmt = db_get_prepare_stmt($con, $sql, [$data]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if ($result) {
+        return mysqli_fetch_all($result, MYSQLI_ASSOC);
+    }
+
+    return mysqli_error($con);
+}
+
+/**
  * Возвращает корректную форму множественного числа
  * Ограничения: только для целых чисел
  *
@@ -144,10 +163,6 @@ function include_template(string $name, array $data = [])
     return $result;
 }
 
-/**
- * Мои функции
- */
-
 
 /**
  * Отладочный вывод. Принимает один параметр который будет выведен на экран
@@ -160,6 +175,11 @@ function dd($data)
     echo '</pre>';
 }
 
+/** Считает сколько задач подходит под категорию проекта
+ * @param $tasks . Список задач
+ * @param $project . Проект
+ * @return int Количество задач подходящих под переданный проект
+ */
 function countTasksForProject($tasks, $project): int
 {
     $tasksNumber = 0;
@@ -171,36 +191,21 @@ function countTasksForProject($tasks, $project): int
     return $tasksNumber;
 }
 
+/**
+ * Определяет является ли задача срочной.
+ * Задача считается срочной если до даты выполнения остается 24 часа или меньше.
+ * @param $date
+ * @return bool Если срочная то true, если не срочная, то false
+ */
 function isTaskImportant($date): bool
 {
-    if (!validateDate1($date)) {
-        return false;
-    }
     $dateDiff = (strtotime($date) - time()) / 3600;
-    if ($dateDiff <= 24) {
-        return true;
-    }
-    return false;
-}
-
-// TODO исправить это
-
-function validateDate1($date, $format = 'Y-m-d'): bool
-{
-    $d = DateTime::createFromFormat($format, $date);
-    return $d && $d->format($format) === $date;
-}
-
-// Запрос для получения списка всех проектов
-function getQueryAllProjects(): string
-{
-    return 'SELECT * FROM things_are_fine.projects';
+    return $dateDiff <= 24;
 }
 
 /**
  * @return string . Запрос для получения списка проектов у текущего пользователя
  */
-
 function getQueryCurrentUserProjects(): string
 {
     return 'SELECT projects.id, projects.name from things_are_fine.projects '
@@ -212,7 +217,6 @@ function getQueryCurrentUserProjects(): string
 /**
  * @return string . Запрос для получения списка задач у текущего пользователя
  */
-
 function getQueryCurrentUserTasks(): string
 {
     return 'SELECT tasks.name, tasks.completion_date, projects.name project, tasks.status FROM things_are_fine.tasks '
@@ -224,9 +228,8 @@ function getQueryCurrentUserTasks(): string
 }
 
 /**
- * @return string . Запрос для получения списка задач отфильтрованных по проекту
+ * @return string . Запрос для получения списка задач, отфильтрованных по проекту
  */
-
 function getQueryFilteredByProjTasks(): string
 {
     return 'SELECT tasks.name, tasks.completion_date, projects.name project, tasks.status FROM things_are_fine.tasks '
@@ -236,24 +239,10 @@ function getQueryFilteredByProjTasks(): string
 }
 
 /**
- * Получить список данных для текущего пользователя, через подготовленное выражение.
- * @param $con . Ресурс соединения
- * @param $data . Данные для вставки в запрос
- * @param $sql . SQL запрос
- * @return array|string
+ * Функция для сохранения данных формы, в случае неудачной отправки запроса
+ * @param $name . Ключ по которому в $_POST массиве будем искать данные из формы
+ * @return mixed Данные из $_POST массива по переданному ключу
  */
-
-function getCurrentUserData($con, $data, $sql): array|string
-{
-    $stmt = db_get_prepare_stmt($con, $sql, [$data]);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-    if ($result) {
-        return mysqli_fetch_all($result, MYSQLI_ASSOC);
-    }
-
-    return mysqli_error($con);
-}
 
 function getPostVal($name)
 {
@@ -261,11 +250,12 @@ function getPostVal($name)
 }
 
 /**
- * Функции валидации
- */
-
-/**
- * Проверка поля с датой на соответствие формату
+ * Проверка поля с датой на соответствие формату ГГГ-ММ-ДД
+ * @param $name . Название ключа в $_POST массиве, по которому будем искать дату
+ * @param string $format . Требуемый формат даты
+ * @return bool|string|null
+ * Возвращает null если формат даты верный, либо если дата не была указана при создании задачи
+ * В остальных случаях возвращает сообщения об ошибках
  */
 function validateDate($name, $format = 'Y-m-d'): bool|string|null
 {
@@ -279,13 +269,15 @@ function validateDate($name, $format = 'Y-m-d'): bool|string|null
         if ($rightFormatDate->format($format) === $date) {
             return null;
         }
-        return 'Введенная дата не соответствует формату ГГГ-ММ-ДД';
+        return 'Введенная дата не соответствует формату с';
     }
     return 'Дата выполнения должна быть больше или равна текущей';
 }
 
 /**
  * Проверка поля на заполненность
+ * @param $name . Название ключа в $_POST массиве, по которому будем искать проверяемое поле
+ * @return string Если проверяемое в $_POST массиве поле, пустое, то возвращает текст ошибки. Иначе, возвращает null
  */
 
 function validateFilled($name)

@@ -32,7 +32,7 @@
                 <select class="form__input form__input--select" name="project" id="project">
                     <option value=""></option>
                     <option value="10">Хакер</option>
-                    <?php foreach($allProjects as $project): ?>
+                    <?php foreach($currentUserProjects as $project): ?>
                         <option value="<?=$project['id']?>"><?=$project['name']?></option>
                     <?php endforeach; ?>
                 </select>

@@ -7,18 +7,12 @@ require_once 'init.php';
 $titleName = 'Дела в порядке';
 $currentUser = "Илья";
 
+$currentUserProjects = '';
+$currentUserTasks = '';
+
 if(!$con){
     $error = mysqli_connect_error();
 }else {
-    // Запрос для получения списка всех проектов
-    $sql =  getQueryAllProjects();
-
-    $result = mysqli_query($con,$sql);
-    if($result){
-        $allProjects = mysqli_fetch_all($result,MYSQLI_ASSOC);
-    }else {
-        $error = mysqli_error($con);
-    }
 
     $currentUserProjects = getCurrentUserData($con,$currentUser,getQueryCurrentUserProjects());
     $currentUserTasks = getCurrentUserData($con,$currentUser,getQueryCurrentUserTasks());
@@ -74,7 +68,6 @@ $content = include_template('add.php', [
     'currentUserProjects' => $currentUserProjects,
     'tasksForCount' => $currentUserTasks,
     'currentUserTasks' => $currentUserTasks,
-    'allProjects' => $allProjects,
 ]);
 $layOut = include_template('layout.php', [
     'titleName' => $titleName,
