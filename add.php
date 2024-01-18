@@ -58,10 +58,21 @@ if(!$con){
         }
 
         $errors = array_filter($errors);
-
         $file_name = $_FILES['file']['name'];
         $file_path = __DIR__ . '/uploads/';
+        $fileUrl = '/uploads/'. $file_name;
         move_uploaded_file($_FILES['file']['tmp_name'], $file_path . $file_name);
+
+        if(empty($errors)){
+            $sql = 'INSERT INTO things_are_fine.tasks(creation_date,name,file,completion_date,project_id,user_id) '
+            . 'VALUES (NOW(),?,?,?,?,1)';
+            $stmt = mysqli_prepare($con, $sql);
+            mysqli_stmt_bind_param($stmt, 'ssss', $task['name'],$fileUrl, $task['date'], $task['project']);
+            mysqli_stmt_execute($stmt);
+            $res = mysqli_stmt_get_result($stmt);
+            header('Location: http://localhost:82/things/');
+        }
+
     }
 }
 
