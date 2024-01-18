@@ -239,14 +239,11 @@ function getQueryFilteredByProjTasks(): string
 }
 
 /**
- * Функция для сохранения данных формы, в случае неудачной отправки запроса
- * @param $name . Ключ по которому в $_POST массиве будем искать данные из формы
- * @return mixed Данные из $_POST массива по переданному ключу
+ * @return string . Запрос для проверки существования проекта по его id
  */
-
-function getPostVal($name)
+function getQueryIsProjExist(): string
 {
-    return $_POST[$name] ?? "";
+    return 'SELECT projects.name FROM things_are_fine.projects WHERE id = ?';
 }
 
 /**
@@ -266,7 +263,7 @@ function validateDateFormat($name, $format = 'Y-m-d'): bool|string|null
     }
 
     $rightFormatDate = DateTime::createFromFormat($format, $date);
-    if($rightFormatDate === false) {
+    if ($rightFormatDate === false) {
         return 'Введенная дата не соответствует формату ГГГГ-ММ-ДД';
     }
 
@@ -279,7 +276,7 @@ function validateDateFormat($name, $format = 'Y-m-d'): bool|string|null
  * @param string $format . Формат даты с которым будем работать
  * @return string|null Если дата не соответствует условию, выводит ошибку.
  */
-function validateDateRange($name, $format = 'Y-m-d'): string|null
+function validateDateRange($name, $format = 'Y-m-d'): null|string
 {
     $date = $_POST[$name];
 
@@ -291,19 +288,32 @@ function validateDateRange($name, $format = 'Y-m-d'): string|null
     if (strtotime($date) < strtotime($curDate)) {
         return 'Дата выполнения должна быть больше или равна текущей';
     }
+
+    return null;
 }
 
 /**
  * Проверка поля на заполненность
  * @param $name . Название ключа в $_POST массиве, по которому будем искать проверяемое поле
- * @return string Если проверяемое в $_POST массиве поле, пустое, то возвращает текст ошибки. Иначе, возвращает null
+ * @return string|null Если проверяемое в $_POST массиве поле, пустое, то возвращает текст ошибки. Иначе, возвращает null
+ * При помощи ltrim() удаляем все пробелы вначале и в конце строки
  */
-function validateFilled($name)
+function validateFilled($name): string|null
 {
-    if (empty($_POST[$name])) {
+    if (empty(trim($_POST[$name]))) {
         return "Это поле должно быть заполнено";
     }
+    return null;
 }
 
+function isProjExist($con,$name): string|null
+{
+    $projectId = $_POST[$name];
+    $project = getCurrentUserData($con,$projectId,getQueryIsProjExist());
+    if(empty($project)){
+        return 'Такого проекта не существует';
+    }
+    return null;
+}
 
 

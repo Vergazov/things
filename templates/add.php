@@ -27,7 +27,7 @@
                 <label class="form__label" for="name" >Название <sup>*</sup></label>
 
                 <input class="form__input
-                <?php if(isset($errors['project'])): ?> form__input--error <?php endif; ?>" type="text" name="name" id="name" value="<?=getPostVal('name')?>" placeholder="Введите название">
+                <?php if(isset($errors['name'])): ?> form__input--error <?php endif; ?>" type="text" name="name" id="name" value="" placeholder="Введите название">
             </div>
 
             <div class="form__row">
