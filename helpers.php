@@ -252,26 +252,45 @@ function getPostVal($name)
 /**
  * Проверка поля с датой на соответствие формату ГГГ-ММ-ДД
  * @param $name . Название ключа в $_POST массиве, по которому будем искать дату
- * @param string $format . Требуемый формат даты
+ * @param string $format . Формат даты, с которым будем сверяться
  * @return bool|string|null
  * Возвращает null если формат даты верный, либо если дата не была указана при создании задачи
- * В остальных случаях возвращает сообщения об ошибках
+ * Если формат неверный, возвращает сообщение об ошибке
  */
-function validateDate($name, $format = 'Y-m-d'): bool|string|null
+function validateDateFormat($name, $format = 'Y-m-d'): bool|string|null
 {
     $date = $_POST[$name];
+
     if ($date === '') {
         return null;
     }
-    $curDate = date($format);
-    if (strtotime($date) >= strtotime($curDate)) {
-        $rightFormatDate = date_create_from_format($format, $date);
-        if ($rightFormatDate->format($format) === $date) {
-            return null;
-        }
-        return 'Введенная дата не соответствует формату с';
+
+    $rightFormatDate = DateTime::createFromFormat($format, $date);
+    if($rightFormatDate === false) {
+        return 'Введенная дата не соответствует формату ГГГГ-ММ-ДД';
     }
-    return 'Дата выполнения должна быть больше или равна текущей';
+
+    return null;
+}
+
+/**
+ * Проверка даты на соответствие условия. Дата должна быть >= текущей
+ * @param $name . Название ключа в $_POST массиве, по которому будем искать дату
+ * @param string $format . Формат даты с которым будем работать
+ * @return string|null Если дата не соответствует условию, выводит ошибку.
+ */
+function validateDateRange($name, $format = 'Y-m-d'): string|null
+{
+    $date = $_POST[$name];
+
+    if ($date === '') {
+        return null;
+    }
+
+    $curDate = date($format);
+    if (strtotime($date) < strtotime($curDate)) {
+        return 'Дата выполнения должна быть больше или равна текущей';
+    }
 }
 
 /**
@@ -279,12 +298,12 @@ function validateDate($name, $format = 'Y-m-d'): bool|string|null
  * @param $name . Название ключа в $_POST массиве, по которому будем искать проверяемое поле
  * @return string Если проверяемое в $_POST массиве поле, пустое, то возвращает текст ошибки. Иначе, возвращает null
  */
-
 function validateFilled($name)
 {
     if (empty($_POST[$name])) {
         return "Это поле должно быть заполнено";
     }
 }
+
 
 

@@ -21,15 +21,23 @@
 
         <form class="form"  action="http://localhost:82/things/add.php" method="post" autocomplete="off">
             <div class="form__row">
+                <?php if(isset($errors['name'])): ?>
+                    <p class="form__message"><?=$errors['name']?></p>
+                <?php endif; ?>
                 <label class="form__label" for="name" >Название <sup>*</sup></label>
 
-                <input class="form__input" type="text" name="name" id="name" value="<?=getPostVal('name')?>" placeholder="Введите название">
+                <input class="form__input
+                <?php if(isset($errors['project'])): ?> form__input--error <?php endif; ?>" type="text" name="name" id="name" value="<?=getPostVal('name')?>" placeholder="Введите название">
             </div>
 
             <div class="form__row">
+                <?php if(isset($errors['project'])): ?>
+                <p class="form__message"><?=$errors['project']?></p>
+                <?php endif; ?>
                 <label class="form__label" for="project">Проект <sup>*</sup></label>
 
-                <select class="form__input form__input--select" name="project" id="project">
+                <select class="form__input form__input--select
+                <?php if(isset($errors['project'])): ?> form__input--error <?php endif; ?>" name="project" id="project">
                     <option value=""></option>
                     <option value="10">Хакер</option>
                     <?php foreach($currentUserProjects as $project): ?>
@@ -39,9 +47,13 @@
             </div>
 
             <div class="form__row">
+                <?php if(isset($errors['date'])): ?>
+                    <p class="form__message"><?=$errors['date']?></p>
+                <?php endif; ?>
                 <label class="form__label" for="date">Дата выполнения</label>
 
-                <input class="form__input form__input--date" type="text" name="date" id="date" value="" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
+                <input class="form__input form__input--date
+                <?php if(isset($errors['date'])): ?> form__input--error <?php endif; ?>" type="text" name="date" id="date" value="" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
             </div>
 
             <div class="form__row">
