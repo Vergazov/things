@@ -6,7 +6,7 @@
             <ul class="main-navigation__list">
                 <?php foreach($currentUserProjects as $project): ?>
                     <li class="main-navigation__list-item <?php if($project['id'] === $projectId): ?>main-navigation__list-item--active<?php endif; ?> ">
-                        <a class="main-navigation__list-item-link" href="?id=<?=$project['id']?>"><?=htmlspecialchars($project['name'])?></a>
+                        <a class="main-navigation__list-item-link" href="<?=getAbsolutePath('index.php')?>?id=<?=$project['id']?>"><?=htmlspecialchars($project['name'])?></a>
                         <span class="main-navigation__list-item-count"><?=countTasksForProject($tasksForCount,$project['name'])?></span>
                     </li>
                 <?php endforeach;?>

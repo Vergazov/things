@@ -1,3 +1,6 @@
+<?php
+//var_dump($_GET);
+?>
 <section class="content__side">
     <h2 class="content__side-heading">Проекты</h2>
 
@@ -57,10 +60,19 @@
                 </td>
 
                 <td class="task__file">
-                    <a class="download-link" href="#">Home.psd</a>
+                    <a class="download-link"
+                       href="
+                          <?php if(isset($_GET['fileUrl'])):?>
+                          <?php if($_GET['taskId'] == $task['id']): ?>
+                            <?=$_GET['fileUrl']?>
+                          <?php endif; ?>
+                          <?php else: ?>
+                            <?= '#' ?>
+                          <?php endif;?>
+                       ">Ссылка на файл</a>
                 </td>
 
-                <td class="task__date"><?=$task['completion_date']?></td>
+                <td class="task__date"><?=htmlspecialchars($task['completion_date'])?></td>
             </tr>
         <?php endforeach; ?>
         <!--показывать следующий тег <tr/>, если переменная $show_complete_tasks равна единице-->

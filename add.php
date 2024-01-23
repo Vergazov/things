@@ -19,6 +19,7 @@ if(!$con){
     $currentUserTasks = getCurrentUserData($con,$currentUser,getQueryCurrentUserTasks());
 
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
+
         $required = ['name', 'project'];
 
         $rules = [
@@ -58,19 +59,29 @@ if(!$con){
         }
 
         $errors = array_filter($errors);
-        $file_name = $_FILES['file']['name'];
-        $file_path = __DIR__ . '/uploads/';
-        $fileUrl = '/uploads/'. $file_name;
+        
+        $taskId = '';
+        $file_path = '';
+        $file_name = '';
+        $fileUrl = '';
+
+        if(!empty($_FILES['file']['name'])){
+            $file_name = $_FILES['file']['name'];
+            $file_path = __DIR__ . '/uploads/';
+            $fileUrl = 'uploads/'. $file_name;
+        }
         move_uploaded_file($_FILES['file']['tmp_name'], $file_path . $file_name);
 
         if(empty($errors)){
-            $sql = 'INSERT INTO things_are_fine.tasks(creation_date,name,file,completion_date,project_id,user_id) '
-            . 'VALUES (NOW(),?,?,?,?,1)';
-            $stmt = mysqli_prepare($con, $sql);
-            mysqli_stmt_bind_param($stmt, 'ssss', $task['name'],$fileUrl, $task['date'], $task['project']);
+            $stmt = db_get_prepare_stmt($con, getQueryAddTask(),[$task['name'],$fileUrl, $task['date'], $task['project']]);
             mysqli_stmt_execute($stmt);
             $res = mysqli_stmt_get_result($stmt);
-            header('Location: http://localhost:82/things/');
+            $taskId = mysqli_insert_id($con);
+            if($fileUrl === ''){
+                header("Location:" . getAbsolutePath('index.php'));
+            }else{
+                header("Location:" . getAbsolutePath('index.php') . "?fileUrl=" . $fileUrl . "&taskId=" . $taskId);
+            }
         }
 
     }

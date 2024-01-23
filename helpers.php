@@ -94,6 +94,14 @@ function getCurrentUserData($con, $data, $sql): array|string
 }
 
 /**
+ * Запрос для вставки информации в БД через подготовленное выражение
+ */
+function insertData()
+{
+
+}
+
+/**
  * Возвращает корректную форму множественного числа
  * Ограничения: только для целых чисел
  *
@@ -230,12 +238,13 @@ function getQueryCurrentUserProjects(): string
  */
 function getQueryCurrentUserTasks(): string
 {
-    return 'SELECT tasks.name, tasks.completion_date, projects.name project, tasks.status FROM things_are_fine.tasks '
+    return 'SELECT tasks.id, tasks.name, tasks.completion_date, projects.name project, tasks.status FROM things_are_fine.tasks '
         . 'JOIN things_are_fine.users '
         . 'ON  tasks.user_id = users.id '
         . 'JOIN things_are_fine.projects '
         . 'ON tasks.project_id = projects.id '
-        . 'WHERE users.name = ?';
+        . 'WHERE users.name = ? '
+        . 'ORDER BY tasks.creation_date DESC';
 }
 
 /**
@@ -246,7 +255,17 @@ function getQueryFilteredByProjTasks(): string
     return 'SELECT tasks.name, tasks.completion_date, projects.name project, tasks.status FROM things_are_fine.tasks '
         . 'JOIN things_are_fine.projects '
         . 'ON tasks.project_id = projects.id '
-        . 'WHERE project_id = ?';
+        . 'WHERE project_id = ? '
+        . 'ORDER BY tasks.creation_date DESC';
+}
+
+/**
+ * @return string . Запрос для добавления новой задачи
+ */
+function getQueryAddTask(): string
+{
+    return 'INSERT INTO things_are_fine.tasks(creation_date,name,file,completion_date,user_id,project_id) '
+        . 'VALUES (NOW(),?,?,?,1,?)';
 }
 
 /**
@@ -304,10 +323,9 @@ function validateDateRange($name, $format = 'Y-m-d'): null|string
 }
 
 /**
- * Проверка поля на заполненность
+ * Проверяет чтобы поля были заполнены, так же удаляет лишние пробелы из начала и конца строки
  * @param $name . Название ключа в $_POST массиве, по которому будем искать проверяемое поле
  * @return string|null Если проверяемое в $_POST массиве поле, пустое, то возвращает текст ошибки. Иначе, возвращает null
- * При помощи ltrim() удаляем все пробелы вначале и в конце строки
  */
 function validateFilled($name): string|null
 {
@@ -323,14 +341,21 @@ function validateFilled($name): string|null
  * @param $name . Название ключа в $_POST массиве, по которому будем искать id проекта
  * @return string|null Возвращает либо ошибку о том что проекта нету либо null если проект существует
  */
-function isProjExist($con,$name): string|null
+function isProjExist($con, $name): string|null
 {
     $projectId = $_POST[$name];
-    $project = getCurrentUserData($con,$projectId,getQueryIsProjExist());
-    if(empty($project)){
+    $project = getCurrentUserData($con, $projectId, getQueryIsProjExist());
+    if (empty($project)) {
         return 'Такого проекта не существует';
     }
     return null;
 }
-
+// Сделать phpdoc
+function getAbsolutePath($file): string
+{
+    $host  = $_SERVER['HTTP_HOST'];
+    $uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+    
+    return "http://$host$uri/$file";
+}
 
