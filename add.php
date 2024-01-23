@@ -31,8 +31,8 @@ if(!$con){
                 if(validateFilled($value)){
                     return validateFilled($value);
                 }
-                if(isProjExist($con, $value)){
-                    return isProjExist($con, $value);
+                if(isProjExists($con, $value)){
+                    return isProjExists($con, $value);
                 }
             },
             // TODO: Сделать читабельнее
@@ -53,7 +53,8 @@ if(!$con){
                 $rule = $rules[$key];
                 $errors[$key] = $rule($key);
             }
-            if(in_array($key, $required, true) && empty($value)){
+            // TODO Думаю можно сделать без этого куска кода. Подумать можно ли его запихнуть в функцию валидации validateFilled()
+            if(in_array($key, $required, true) && empty(trim($value))){
                 $errors[$key] = "Поле $key должно быть заполнено";
             }
         }
@@ -74,13 +75,14 @@ if(!$con){
 
         if(empty($errors)){
             $stmt = db_get_prepare_stmt($con, getQueryAddTask(),[$task['name'],$fileUrl, $task['date'], $task['project']]);
-            mysqli_stmt_execute($stmt);
-            $res = mysqli_stmt_get_result($stmt);
-            $taskId = mysqli_insert_id($con);
-            if($fileUrl === ''){
-                header("Location:" . getAbsolutePath('index.php'));
-            }else{
-                header("Location:" . getAbsolutePath('index.php') . "?fileUrl=" . $fileUrl . "&taskId=" . $taskId);
+            $res = mysqli_stmt_execute($stmt);
+            if($res){
+                $taskId = mysqli_insert_id($con);
+                if($fileUrl === ''){
+                    header("Location:" . getAbsolutePath('index.php'));
+                }else{
+                    header("Location:" . getAbsolutePath('index.php') . "?fileUrl=" . $fileUrl . "&taskId=" . $taskId);
+                }
             }
         }
 

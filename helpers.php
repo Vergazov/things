@@ -269,23 +269,40 @@ function getQueryAddTask(): string
 }
 
 /**
+ * @return string . Запрос для добавления нового пользователя
+ */
+function getQueryAddUser(): string
+{
+    return 'INSERT INTO things_are_fine.users(reg_date, email, name, password) '
+        . 'VALUES (NOW(),?,?,?)';
+}
+
+/**
  * @return string . Запрос для проверки существования проекта по его id
  */
-function getQueryIsProjExist(): string
+function getQueryIsProjExists(): string
 {
     return 'SELECT projects.name FROM things_are_fine.projects WHERE id = ?';
 }
 
 /**
- * Проверка поля с датой на соответствие формату ГГГ-ММ-ДД
+ * @return string . Запрос для проверки существования почты в базе
+ */
+function getQueryIsEmailExists(): string
+{
+    return 'SELECT users.email FROM things_are_fine.users WHERE email = ?';
+}
+
+/**
+ * Проверка поля с датой на соответствие формату ГГГГ-ММ-ДД
  * @param $name . Название ключа в $_POST массиве, по которому будем искать дату
- * @param string $format . Формат даты, с которым будем сверяться
  * @return bool|string|null
  * Возвращает null если формат даты верный, либо если дата не была указана при создании задачи
  * Если формат неверный, возвращает сообщение об ошибке
  */
-function validateDateFormat($name, $format = 'Y-m-d'): bool|string|null
+function validateDateFormat($name): bool|string|null
 {
+    $format = 'Y-m-d';
     $date = $_POST[$name];
 
     if ($date === '') {
@@ -303,11 +320,11 @@ function validateDateFormat($name, $format = 'Y-m-d'): bool|string|null
 /**
  * Проверка даты на соответствие условия. Дата должна быть >= текущей
  * @param $name . Название ключа в $_POST массиве, по которому будем искать дату
- * @param string $format . Формат даты с которым будем работать
  * @return string|null Если дата не соответствует условию, выводит ошибку.
  */
-function validateDateRange($name, $format = 'Y-m-d'): null|string
+function validateDateRange($name): null|string
 {
+    $format = 'Y-m-d';
     $date = $_POST[$name];
 
     if ($date === '') {
@@ -341,21 +358,61 @@ function validateFilled($name): string|null
  * @param $name . Название ключа в $_POST массиве, по которому будем искать id проекта
  * @return string|null Возвращает либо ошибку о том что проекта нету либо null если проект существует
  */
-function isProjExist($con, $name): string|null
+function isProjExists($con, $name): string|null
 {
     $projectId = $_POST[$name];
-    $project = getCurrentUserData($con, $projectId, getQueryIsProjExist());
+    $project = getCurrentUserData($con, $projectId, getQueryIsProjExists());
     if (empty($project)) {
         return 'Такого проекта не существует';
     }
     return null;
 }
-// Сделать phpdoc
+
+/**
+ * Проверяет почту в базе на дубликат
+ * @param $con
+ * @param $name
+ * @return string|null
+ * Если находит в базе почту идентичную той что ввел пользователь, то возвращает текст ошибки.
+ * В противном случае возвращает null
+ */
+function isEmailExists($con, $name): string|null
+{
+    $emailFromForm = $_POST[$name];
+    $emailFromBase = getCurrentUserData($con, $emailFromForm, getQueryIsEmailExists());
+    if(!empty($emailFromBase)){
+        return 'Указанный почтовый ящик уже занят';
+    }
+    return null;
+}
+
+/**
+ * Формирует абсолютный путь к файлу переданному функции
+ * @param $file
+ * @return string
+ */
 function getAbsolutePath($file): string
 {
-    $host  = $_SERVER['HTTP_HOST'];
-    $uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-    
+    $host = $_SERVER['HTTP_HOST'];
+    $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+
     return "http://$host$uri/$file";
 }
+
+/**
+ * Проверяет email на соответствие формату
+ * @param $name
+ * @return string|null
+ * Возвращает сообщение об ошибке если валидация не пройдена, если пройдена возвращает null
+ */
+function validateEmailFormat($name): null|string
+{
+    $email = $_POST[$name];
+    $validate = filter_var($email, FILTER_VALIDATE_EMAIL);
+    if ($validate === false) {
+        return 'Поле Email не соответствует формату';
+    }
+    return null;
+}
+
 

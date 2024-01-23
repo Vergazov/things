@@ -22,27 +22,39 @@
 
                 <form class="form" action="register.php" method="post" autocomplete="off">
                     <div class="form__row">
+                        <?php if(isset($errors['email'])): ?>
+                            <p class="form__message"><?=$errors['email']?></p>
+                        <?php endif; ?>
                         <label class="form__label" for="email">E-mail <sup>*</sup></label>
 
-                        <input class="form__input form__input--error" type="text" name="email" id="email" value="" placeholder="Введите e-mail">
-
-                        <p class="form__message">E-mail введён некорректно</p>
+                        <input class="form__input
+                        <?php if(isset($errors['email'])): ?> form__input--error <?php endif; ?>" type="text" name="email" id="email" value="" placeholder="Введите e-mail">
                     </div>
 
                     <div class="form__row">
+                        <?php if(isset($errors['password'])): ?>
+                            <p class="form__message"><?=$errors['password']?></p>
+                        <?php endif; ?>
                         <label class="form__label" for="password">Пароль <sup>*</sup></label>
 
-                        <input class="form__input" type="password" name="password" id="password" value="" placeholder="Введите пароль">
+                        <input class="form__input
+                        <?php if(isset($errors['password'])): ?> form__input--error <?php endif; ?>" type="password" name="password" id="password" value="" placeholder="Введите пароль">
                     </div>
 
                     <div class="form__row">
+                        <?php if(isset($errors['name'])): ?>
+                            <p class="form__message"><?=$errors['name']?></p>
+                        <?php endif; ?>
                         <label class="form__label" for="name">Имя <sup>*</sup></label>
 
-                        <input class="form__input" type="text" name="name" id="name" value="" placeholder="Введите имя">
+                        <input class="form__input
+                        <?php if(isset($errors['name'])): ?> form__input--error <?php endif; ?>" type="text" name="name" id="name" value="" placeholder="Введите имя">
                     </div>
 
                     <div class="form__row form__row--controls">
-                        <p class="error-message">Пожалуйста, исправьте ошибки в форме</p>
+                        <?php if(!empty($errors)): ?>
+                            <p class="error-message">Пожалуйста, исправьте ошибки в форме</p>
+                        <?php endif; ?>
 
                         <input class="button" type="submit" name="" value="Зарегистрироваться">
                     </div>
