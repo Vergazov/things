@@ -1,22 +1,19 @@
-<header class="main-header">
-    <a href="#">
-        <img src="../img/logo.png" width="153" height="42" alt="Логитип Дела в порядке">
-    </a>
+<body class="body-background">
+<h1 class="visually-hidden">Дела в порядке</h1>
+<div class="page-wrapper">
+    <div class="container">
+        <div class="content">
+            <section class="welcome">
+                <h2 class="welcome__heading">«Дела в порядке»</h2>
 
-    <div class="main-header__side">
-        <a class="main-header__side-item button button--transparent" href="form-authorization.html">Войти</a>
-    </div>
-</header>
-<div class="content">
-    <section class="welcome">
-        <h2 class="welcome__heading">«Дела в порядке»</h2>
+                <div class="welcome__text">
+                    <p>«Дела в порядке» — это веб приложение для удобного ведения списка дел. Сервис помогает пользователям не забывать о предстоящих важных событиях и задачах.</p>
 
-        <div class="welcome__text">
-            <p>«Дела в порядке» — это веб приложение для удобного ведения списка дел. Сервис помогает пользователям не забывать о предстоящих важных событиях и задачах.</p>
+                    <p>После создания аккаунта, пользователь может начать вносить свои дела, деля их по проектам и указывая сроки.</p>
+                </div>
 
-            <p>После создания аккаунта, пользователь может начать вносить свои дела, деля их по проектам и указывая сроки.</p>
+                <a class="welcome__button button" href="<?=getAbsolutePath('register.php')?>">Зарегистрироваться</a>
+            </section>
         </div>
-
-        <a class="welcome__button button" href="register.html">Зарегистрироваться</a>
-    </section>
+    </div>
 </div>

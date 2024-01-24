@@ -13,21 +13,26 @@
 <h1 class="visually-hidden"><?=$titleName?></h1>
 
 <div class="page-wrapper">
-    <div class="container container--with-sidebar">
+    <div class="container <?php if(isset($user)): ?>container--with-sidebar<?php endif; ?>">
         <header class="main-header">
             <a href="<?=getAbsolutePath('index.php')?>">
                 <img src="img/logo.png" width="153" height="42" alt="Логотип Дела в порядке">
             </a>
 
             <div class="main-header__side">
-                <a class="main-header__side-item button button--plus open-modal" href="<?=getAbsolutePath('add.php')?>">Добавить задачу</a>
-
-                <div class="main-header__side-item user-menu">
-                    <div class="user-menu__data">
-                        <p><?=$currentUser?></p>
-                        <a href="#">Выйти</a>
+                <?php if(isset($user)): ?>
+                    <a class="main-header__side-item button button--plus open-modal" href="<?=getAbsolutePath('add.php')?>">Добавить задачу</a>
+                    <div class="main-header__side-item user-menu">
+                        <div class="user-menu__data">
+                            <p><?=$user?></p>
+                            <a href="#">Выйти</a>
+                        </div>
                     </div>
-                </div>
+                <?php else: ?>
+                    <div class="main-header__side">
+                        <a class="main-header__side-item button button--transparent" href="<?=getAbsolutePath('auth.php')?>">Войти</a>
+                    </div>
+                <?php endif; ?>
             </div>
         </header>
 
@@ -44,8 +49,9 @@
 
             <p>Веб-приложение для удобного ведения списка дел.</p>
         </div>
-
+        <?php if(isset($user)): ?>
         <a class="main-footer__button button button--plus" href="<?=getAbsolutePath('add.php')?>">Добавить задачу</a>
+        <?php endif; ?>
 
         <div class="main-footer__social social">
             <span class="visually-hidden">Мы в соцсетях:</span>

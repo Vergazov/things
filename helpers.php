@@ -294,6 +294,14 @@ function getQueryIsEmailExists(): string
 }
 
 /**
+ * @return string . Запрос всей информации о пользователе иза базы
+ */
+function getQueryUser(): string
+{
+    return 'SELECT * FROM things_are_fine.users WHERE email = ?';
+}
+
+/**
  * Проверка поля с датой на соответствие формату ГГГГ-ММ-ДД
  * @param $name . Название ключа в $_POST массиве, по которому будем искать дату
  * @return bool|string|null
@@ -380,8 +388,24 @@ function isEmailExists($con, $name): string|null
 {
     $emailFromForm = $_POST[$name];
     $emailFromBase = getCurrentUserData($con, $emailFromForm, getQueryIsEmailExists());
-    if(!empty($emailFromBase)){
+    if (!empty($emailFromBase)) {
         return 'Указанный почтовый ящик уже занят';
+    }
+    return null;
+}
+
+/**
+ * Проверяет при аутентификации, существует ли такая почта. Если да, то все ок, если нет, значит такого пользователя нет
+ * @param $con
+ * @param $name
+ * @return string|null Если находит почту, возвращает null, если не находит, то сообщение об ошибке
+ */
+function isEmailExistsForAuth($con, $name): string|null
+{
+    $emailFromForm = $_POST[$name];
+    $emailFromBase = getCurrentUserData($con, $emailFromForm, getQueryIsEmailExists());
+    if (empty($emailFromBase)) {
+        return 'Пользователя таким почтовым ящиком не существует';
     }
     return null;
 }
@@ -413,6 +437,12 @@ function validateEmailFormat($name): null|string
         return 'Поле Email не соответствует формату';
     }
     return null;
+}
+
+function getUserData($con, $email)
+{
+    return getCurrentUserData($con, $email, getQueryUser());
+
 }
 
 

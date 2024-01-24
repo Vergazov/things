@@ -89,15 +89,25 @@ if(!$con){
     }
 }
 
-$content = include_template('add.php', [
-    'currentUserProjects' => $currentUserProjects,
-    'tasksForCount' => $currentUserTasks,
-    'currentUserTasks' => $currentUserTasks,
-    'errors' => $errors,
-]);
-$layOut = include_template('layout.php', [
-    'titleName' => $titleName,
-    'currentUser' => $currentUser,
-    'content' => $content,
-]);
+if (!isset($_SESSION['user'])) {
+    $content = include_template('guest.php');
+
+    $layOut = include_template('layout.php', [
+        'content' => $content,
+        'titleName' => $titleName,
+    ]);
+}else {
+
+    $content = include_template('add.php', [
+        'currentUserProjects' => $currentUserProjects,
+        'tasksForCount' => $currentUserTasks,
+        'currentUserTasks' => $currentUserTasks,
+        'errors' => $errors,
+    ]);
+    $layOut = include_template('layout.php', [
+        'titleName' => $titleName,
+        'currentUser' => $currentUser,
+        'content' => $content,
+    ]);
+}
 print($layOut);
