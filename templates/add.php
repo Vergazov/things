@@ -39,7 +39,7 @@
                 <select class="form__input form__input--select
                 <?php if(isset($errors['project'])): ?> form__input--error <?php endif; ?>" name="project" id="project">
                     <option value=""></option>
-                    <option value="10">Хакер</option>
+                    <option value="10">Хацкер</option>
                     <?php foreach($currentUserProjects as $project): ?>
                         <option value="<?=$project['id']?>"
                             <?php if(getPostVal('project') == $project['id']): ?> selected <?php endif; ?> ><?=$project['name']?></option>

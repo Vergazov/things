@@ -94,14 +94,6 @@ function getCurrentUserData($con, $data, $sql): array|string
 }
 
 /**
- * Запрос для вставки информации в БД через подготовленное выражение
- */
-function insertData()
-{
-
-}
-
-/**
  * Возвращает корректную форму множественного числа
  * Ограничения: только для целых чисел
  *
@@ -252,7 +244,7 @@ function getQueryCurrentUserTasks(): string
  */
 function getQueryFilteredByProjTasks(): string
 {
-    return 'SELECT tasks.name, tasks.completion_date, projects.name project, tasks.status FROM things_are_fine.tasks '
+    return 'SELECT tasks.id, tasks.name, tasks.completion_date, projects.name project, tasks.status FROM things_are_fine.tasks '
         . 'JOIN things_are_fine.projects '
         . 'ON tasks.project_id = projects.id '
         . 'WHERE project_id = ? '
@@ -265,7 +257,16 @@ function getQueryFilteredByProjTasks(): string
 function getQueryAddTask(): string
 {
     return 'INSERT INTO things_are_fine.tasks(creation_date,name,file,completion_date,user_id,project_id) '
-        . 'VALUES (NOW(),?,?,?,1,?)';
+        . 'VALUES (NOW(),?,?,?,?,?)';
+}
+
+/**
+ * @return string . Запрос для добавления нового проекта
+ */
+function getQueryAddProject(): string
+{
+    return 'INSERT INTO things_are_fine.projects(name,user_id) '
+        . 'VALUES (?,?)';
 }
 
 /**
@@ -286,6 +287,14 @@ function getQueryIsProjExists(): string
 }
 
 /**
+ * @return string . Запрос для проверки существования проекта по его id
+ */
+function getQueryIsProjExistsByName(): string
+{
+    return 'SELECT projects.name FROM things_are_fine.projects WHERE name = ?';
+}
+
+/**
  * @return string . Запрос для проверки существования почты в базе
  */
 function getQueryIsEmailExists(): string
@@ -294,11 +303,35 @@ function getQueryIsEmailExists(): string
 }
 
 /**
- * @return string . Запрос всей информации о пользователе иза базы
+ * @return string . Запрос всей информации о пользователе иза базы по email
  */
-function getQueryUser(): string
+function getQueryUserByEmail(): string
 {
     return 'SELECT * FROM things_are_fine.users WHERE email = ?';
+}
+
+/**
+ * @return string . Запрос всей информации о пользователе из базы по id
+ */
+function getQueryUserById(): string
+{
+    return 'SELECT * FROM things_are_fine.users WHERE id = ?';
+}
+
+/**
+ * @return string . запрос для FULLTEXT поиска по задачам
+ */
+function getQueryFtSearchCurrentUserTasks(): string
+{
+    return 'SELECT * FROM things_are_fine.tasks WHERE MATCH (name) AGAINST (?)';
+}
+
+/**
+ * @return string . инвертировать статус задачи
+ */
+function getQueryInvertTaskStatus(): string
+{
+    return 'UPDATE things_are_fine.tasks SET status = ? WHERE tasks.id = ?';
 }
 
 /**
@@ -377,6 +410,22 @@ function isProjExists($con, $name): string|null
 }
 
 /**
+ * Проверка существует ли проект. Осуществляется по имени проекта в базе
+ * @param $con . Ресурс соединения с БД
+ * @param $name . Название ключа в $_POST массиве, по которому будем искать имя проекта
+ * @return string|null Возвращает либо ошибку о том что проекта нету либо null если проект существует
+ */
+function isProjExistsByName($con, $name): string|null
+{
+    $projectName = $_POST[$name];
+    $project = getCurrentUserData($con, $projectName, getQueryIsProjExistsByName());
+    if (!empty($project)) {
+        return 'Проект с таким названием уже есть';
+    }
+    return null;
+}
+
+/**
  * Проверяет почту в базе на дубликат
  * @param $con
  * @param $name
@@ -405,7 +454,7 @@ function isEmailExistsForAuth($con, $name): string|null
     $emailFromForm = $_POST[$name];
     $emailFromBase = getCurrentUserData($con, $emailFromForm, getQueryIsEmailExists());
     if (empty($emailFromBase)) {
-        return 'Пользователя таким почтовым ящиком не существует';
+        return 'Пользователя c таким почтовым ящиком не существует';
     }
     return null;
 }
@@ -439,9 +488,27 @@ function validateEmailFormat($name): null|string
     return null;
 }
 
-function getUserData($con, $email)
+/** Возвращает всю информацию об одном пользователе
+ * @param $con . Ресурс подключения
+ * @param $email . Email по которому ищем пользователя
+ * @return array|string
+ */
+function getUserDataByEmail($con, $email): array|string
 {
-    return getCurrentUserData($con, $email, getQueryUser());
+    $userData = getCurrentUserData($con, $email, getQueryUserByEmail());
+    return $userData[0];
+
+}
+
+/** Возвращает всю информацию об одном пользователе
+ * @param $con . Ресурс подключения
+ * @param $id . id по которому ищем пользователя
+ * @return array|string
+ */
+function getUserDataById($con, $id): array|string
+{
+    $userData = getCurrentUserData($con, $id, getQueryUserById());
+    return $userData[0];
 
 }
 

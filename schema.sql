@@ -34,3 +34,5 @@ CREATE TABLE IF NOT EXISTS tasks (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
+
+CREATE FULLTEXT INDEX task_name_ft_search on things_are_fine.tasks(name)

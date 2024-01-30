@@ -25,7 +25,7 @@
                     <div class="main-header__side-item user-menu">
                         <div class="user-menu__data">
                             <p><?=$user?></p>
-                            <a href="#">Выйти</a>
+                            <a href="<?=getAbsolutePath('logout.php')?>">Выйти</a>
                         </div>
                     </div>
                 <?php else: ?>

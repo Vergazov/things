@@ -1,14 +1,13 @@
 <?php
-
 require_once 'helpers.php';
 require_once 'init.php';
 session_start();
 
 $titleName = 'Дела в порядке';
-
 $currentUserName = '';
 $currentUserId = '';
 $currentUserEmail = '';
+
 if(!empty($_SESSION['user']['id'])){
     $currentUserId = $_SESSION['user']['id'];
     $currentUser = getUserDataById($con,$currentUserId);
@@ -23,41 +22,27 @@ $errors = [];
 if(!$con){
     $error = mysqli_connect_error();
 }else {
-
     $currentUserProjects = getCurrentUserData($con,$currentUserName,getQueryCurrentUserProjects());
     $currentUserTasks = getCurrentUserData($con,$currentUserName,getQueryCurrentUserTasks());
 
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-        $required = ['name', 'project'];
+        $required = ['project_name'];
 
         $rules = [
-            'name' => function($value){
-                return validateFilled($value);
-            },
-            // TODO: Сделать читабельнее
-            'project' => function($value) use ($con) {
+            'project_name' => function($value) use ($con) {
                 if(validateFilled($value)){
                     return validateFilled($value);
                 }
-                if(isProjExists($con, $value)){
-                    return isProjExists($con, $value);
-                }
-            },
-            // TODO: Сделать читабельнее
-            'date' => function($value){
-                if(validateDateFormat($value)){
-                    return validateDateFormat($value);
-                }
-                if(validateDateRange($value)){
-                    return validateDateRange($value);
+                if(isProjExistsByName($con, $value)){
+                    return isProjExistsByName($con, $value);
                 }
             },
         ];
 
-        $task = filter_input_array(INPUT_POST,['name' => FILTER_DEFAULT, 'project' => FILTER_DEFAULT, 'date' => FILTER_DEFAULT]);
+        $project = filter_input_array(INPUT_POST,['project_name' => FILTER_DEFAULT]);
 
-        foreach ($task as $key => $value) {
+        foreach ($project as $key => $value) {
             if(isset($rules[$key])){
                 $rule = $rules[$key];
                 $errors[$key] = $rule($key);
@@ -67,34 +52,15 @@ if(!$con){
                 $errors[$key] = "Поле $key должно быть заполнено";
             }
         }
-
         $errors = array_filter($errors);
-        
-        $taskId = '';
-        $file_path = '';
-        $file_name = '';
-        $fileUrl = '';
-
-        if(!empty($_FILES['file']['name'])){
-            $file_name = $_FILES['file']['name'];
-            $file_path = __DIR__ . '/uploads/';
-            $fileUrl = 'uploads/'. $file_name;
-        }
-        move_uploaded_file($_FILES['file']['tmp_name'], $file_path . $file_name);
 
         if(empty($errors)){
-            $stmt = db_get_prepare_stmt($con, getQueryAddTask(),[$task['name'],$fileUrl, $task['date'],$currentUserId, $task['project']]);
+            $stmt = db_get_prepare_stmt($con, getQueryAddProject(),[$project['project_name'],$currentUserId]);
             $res = mysqli_stmt_execute($stmt);
             if($res){
-                $taskId = mysqli_insert_id($con);
-                if($fileUrl === ''){
-                    header("Location:" . getAbsolutePath('index.php'));
-                }else{
-                    header("Location:" . getAbsolutePath('index.php') . "?fileUrl=" . $fileUrl . "&taskId=" . $taskId);
-                }
+                header("Location:" . getAbsolutePath('index.php'));
             }
         }
-
     }
 }
 
@@ -107,7 +73,7 @@ if (empty($_SESSION['user']['id'])) {
     ]);
 }else {
 
-    $content = include_template('add.php', [
+    $content = include_template('add_project.php', [
         'currentUserProjects' => $currentUserProjects,
         'tasksForCount' => $currentUserTasks,
         'currentUserTasks' => $currentUserTasks,
