@@ -327,7 +327,7 @@ function getQueryUserById(): string
  */
 function getQueryFtSearchCurrentUserTasks(): string
 {
-    return 'SELECT * FROM things_are_fine.tasks WHERE MATCH (name) AGAINST (?)';
+    return 'SELECT * FROM things_are_fine.tasks WHERE MATCH (name) AGAINST (?) AND user_id = ?';
 }
 
 /**

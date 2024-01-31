@@ -35,7 +35,7 @@ if(!$con){
         $ftSearchTask = trim(filter_input(INPUT_GET,'ft_search'));
 
         if($ftSearchTask !== ''){
-            $currentUserTasks = getCurrentUserData($con,$ftSearchTask,getQueryFtSearchCurrentUserTasks());
+            $currentUserTasks = getCurrentUserData($con,[$ftSearchTask, $currentUserId],getQueryFtSearchCurrentUserTasks());
         }else{
             $currentUserTasks = getCurrentUserData($con,$currentUserName,getQueryCurrentUserTasks());
         }
