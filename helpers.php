@@ -32,6 +32,7 @@ function is_date_valid(string $date): bool
  */
 function db_get_prepare_stmt($link, $sql, $data = [])
 {
+//    dd($data);
     $stmt = mysqli_prepare($link, $sql);
 
     if ($stmt === false) {
@@ -61,7 +62,6 @@ function db_get_prepare_stmt($link, $sql, $data = [])
         }
 
         $values = array_merge([$stmt, $types], $stmt_data);
-
         $func = 'mysqli_stmt_bind_param';
         $func(...$values);
 
@@ -83,7 +83,11 @@ function db_get_prepare_stmt($link, $sql, $data = [])
  */
 function getCurrentUserData($con, $data, $sql): array|string
 {
-    $stmt = db_get_prepare_stmt($con, $sql, [$data]);
+    if(is_array($data)){
+        $stmt = db_get_prepare_stmt($con, $sql, $data);
+    }else{
+        $stmt = db_get_prepare_stmt($con, $sql, [$data]);
+    }
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     if ($result) {
@@ -291,7 +295,7 @@ function getQueryIsProjExists(): string
  */
 function getQueryIsProjExistsByName(): string
 {
-    return 'SELECT projects.name FROM things_are_fine.projects WHERE name = ?';
+    return 'SELECT projects.name FROM things_are_fine.projects WHERE name = ? AND user_id = ?';
 }
 
 /**
@@ -415,10 +419,10 @@ function isProjExists($con, $name): string|null
  * @param $name . Название ключа в $_POST массиве, по которому будем искать имя проекта
  * @return string|null Возвращает либо ошибку о том что проекта нету либо null если проект существует
  */
-function isProjExistsByName($con, $name): string|null
+function isProjExistsByName($con, $name, $userId): string|null
 {
     $projectName = $_POST[$name];
-    $project = getCurrentUserData($con, $projectName, getQueryIsProjExistsByName());
+    $project = getCurrentUserData($con, [$projectName, $userId], getQueryIsProjExistsByName());
     if (!empty($project)) {
         return 'Проект с таким названием уже есть';
     }

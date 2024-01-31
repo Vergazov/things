@@ -30,18 +30,17 @@ if(!$con){
         $required = ['project_name'];
 
         $rules = [
-            'project_name' => function($value) use ($con) {
+            'project_name' => function($value) use ($con,$currentUserId) {
                 if(validateFilled($value)){
                     return validateFilled($value);
                 }
-                if(isProjExistsByName($con, $value)){
-                    return isProjExistsByName($con, $value);
+                if(isProjExistsByName($con, $value, $currentUserId)){
+                    return isProjExistsByName($con, $value, $currentUserId);
                 }
             },
         ];
 
         $project = filter_input_array(INPUT_POST,['project_name' => FILTER_DEFAULT]);
-
         foreach ($project as $key => $value) {
             if(isset($rules[$key])){
                 $rule = $rules[$key];
