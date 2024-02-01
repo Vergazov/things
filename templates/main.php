@@ -5,7 +5,7 @@
         <ul class="main-navigation__list">
             <?php foreach($currentUserProjects as $project): ?>
                 <li class="main-navigation__list-item <?php if($project['id'] == $projectId): ?>main-navigation__list-item--active<?php endif; ?> ">
-                    <a class="main-navigation__list-item-link" href="?id=<?=$project['id']?>"><?=htmlspecialchars($project['name'])?></a>
+                    <a class="main-navigation__list-item-link" href="?project_id=<?=$project['id']?>"><?=htmlspecialchars($project['name'])?></a>
                     <span class="main-navigation__list-item-count"><?=countTasksForProject($tasksForCount,$project['name'])?></span>
                 </li>
             <?php endforeach;?>
@@ -27,10 +27,13 @@
 
     <div class="tasks-controls">
         <nav class="tasks-switch">
-            <a href="/" class="tasks-switch__item tasks-switch__item--active">Все задачи</a>
-            <a href="/" class="tasks-switch__item">Повестка дня</a>
-            <a href="/" class="tasks-switch__item">Завтра</a>
-            <a href="/" class="tasks-switch__item">Просроченные</a>
+            <a href="<?=getAbsolutePath('index.php')?>" class="tasks-switch__item">Все задачи</a>
+            <a href="<?=getAbsolutePath('index.php')?>?filter=today" class="tasks-switch__item
+            <?php if($filter === 'today'):?> <?='tasks-switch__item--active'?><?php endif ?>">Повестка дня</a>
+            <a href="<?=getAbsolutePath('index.php')?>?filter=tomorrow" class="tasks-switch__item
+            <?php if($filter === 'tomorrow'):?> <?='tasks-switch__item--active'?><?php endif ?>">Завтра</a>
+            <a href="<?=getAbsolutePath('index.php')?>?filter=overdue" class="tasks-switch__item
+            <?php if($filter === 'overdue'):?> <?='tasks-switch__item--active'?><?php endif ?>">Просроченные</a>
         </nav>
 
         <label class="checkbox">
