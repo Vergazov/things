@@ -75,7 +75,7 @@ function db_get_prepare_stmt($link, $sql, $data = [])
 }
 
 /**
- * Выполняет подготовленное выражение. Будет работать если в подготовленном выражении есть только 1 плейсхолдер.
+ * Выполняет подготовленное выражение.
  * @param $con . Ресурс соединения
  * @param $data . Данные для вставки в запрос
  * @param $sql . SQL запрос
@@ -323,7 +323,7 @@ function getQueryUserById(): string
 }
 
 /**
- * @return string . запрос для FULLTEXT поиска по задачам
+ * @return string . возвращает запрос для FULLTEXT поиска по задачам у текущего пользователя
  */
 function getQueryFtSearchCurrentUserTasks(): string
 {
@@ -336,6 +336,38 @@ function getQueryFtSearchCurrentUserTasks(): string
 function getQueryInvertTaskStatus(): string
 {
     return 'UPDATE things_are_fine.tasks SET status = ? WHERE tasks.id = ?';
+}
+
+/**
+ * @return string . возвращает запрос для поиска задачи по id у текущего пользователя
+ */
+function getQuerySearchTaskById(): string
+{
+    return 'SELECT * FROM things_are_fine.tasks WHERE id = ? AND user_id = ?';
+}
+
+/**
+ * @return string . возвращает запрос для поиска задач на сегодня у текущего пользователя
+ */
+function getQuerySearchTodayTasks(): string
+{
+    return 'SELECT * FROM things_are_fine.tasks WHERE completion_date = CURDATE() AND user_id = ?';
+}
+
+/**
+ * @return string . возвращает запрос для поиска задач на завтра у текущего пользователя
+ */
+function getQuerySearchTomorrowTasks(): string
+{
+    return 'SELECT * FROM things_are_fine.tasks WHERE completion_date = DATE_ADD(CURDATE(), INTERVAL 1 DAY) AND user_id = ?';
+}
+
+/**
+ * @return string . возвращает запрос для поиска просроченных задач у текущего пользователя
+ */
+function getQuerySearchOverdueTasks(): string
+{
+    return 'SELECT * FROM things_are_fine.tasks WHERE completion_date < CURDATE() AND user_id = ?';
 }
 
 /**
@@ -405,7 +437,11 @@ function validateFilled($name): string|null
  */
 function isProjExists($con, $name): string|null
 {
-    $projectId = $_POST[$name];
+    if(isset($_POST[$name])){
+        $projectId = $_POST[$name];
+    }else{
+        $projectId = $name;
+    }
     $project = getCurrentUserData($con, $projectId, getQueryIsProjExists());
     if (empty($project)) {
         return 'Такого проекта не существует';
