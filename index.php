@@ -31,8 +31,8 @@ if (!$con) {
 
 } else {
 
-    $currentUserProjects = getCurrentUserData($con, $currentUserName, getQueryCurrentUserProjects());
-    $currentUserAllTasks = getCurrentUserData($con, $currentUserName, getQueryCurrentUserTasks());
+    $currentUserProjects = getCurrentUserData($con, $currentUserId, getQueryCurrentUserProjects());
+    $currentUserAllTasks = getCurrentUserData($con, $currentUserId, getQueryCurrentUserTasks());
     $currentUserTasks = $currentUserAllTasks;
 
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -45,7 +45,7 @@ if (!$con) {
         $projectId = filter_input(INPUT_GET, 'project_id', FILTER_SANITIZE_NUMBER_INT);
         if ($projectId) {
             $currentUserTasks = getCurrentUserData($con, $projectId, getQueryFilteredByProjTasks());
-            $projExists = isProjExists($con, $projectId);
+            $projExists = isProjExists($con, $projectId, $currentUserId);
             if (empty($currentUserTasks) && $projExists !== null) {
                 return http_response_code(404);
             }

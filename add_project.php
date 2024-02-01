@@ -22,8 +22,8 @@ $errors = [];
 if(!$con){
     $error = mysqli_connect_error();
 }else {
-    $currentUserProjects = getCurrentUserData($con,$currentUserName,getQueryCurrentUserProjects());
-    $currentUserTasks = getCurrentUserData($con,$currentUserName,getQueryCurrentUserTasks());
+    $currentUserProjects = getCurrentUserData($con,$currentUserId,getQueryCurrentUserProjects());
+    $currentUserTasks = getCurrentUserData($con,$currentUserId,getQueryCurrentUserTasks());
 
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
 

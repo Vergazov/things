@@ -226,7 +226,7 @@ function getQueryCurrentUserProjects(): string
     return 'SELECT projects.id, projects.name from things_are_fine.projects '
         . 'JOIN things_are_fine.users '
         . 'ON projects.user_id = users.id '
-        . 'WHERE users.name = ?';
+        . 'WHERE users.id = ?';
 }
 
 /**
@@ -239,7 +239,7 @@ function getQueryCurrentUserTasks(): string
         . 'ON  tasks.user_id = users.id '
         . 'JOIN things_are_fine.projects '
         . 'ON tasks.project_id = projects.id '
-        . 'WHERE users.name = ? '
+        . 'WHERE users.id = ? '
         . 'ORDER BY tasks.creation_date DESC';
 }
 
@@ -287,7 +287,7 @@ function getQueryAddUser(): string
  */
 function getQueryIsProjExists(): string
 {
-    return 'SELECT projects.name FROM things_are_fine.projects WHERE id = ?';
+    return 'SELECT projects.name FROM things_are_fine.projects WHERE id = ? AND user_id = ?';
 }
 
 /**
@@ -435,14 +435,14 @@ function validateFilled($name): string|null
  * @param $name . Название ключа в $_POST массиве, по которому будем искать id проекта
  * @return string|null Возвращает либо ошибку о том что проекта нету либо null если проект существует
  */
-function isProjExists($con, $name): string|null
+function isProjExists($con, $name, $currentUserId): string|null
 {
-    if(isset($_POST[$name])){
+    if(!empty($_POST[$name])){
         $projectId = $_POST[$name];
     }else{
         $projectId = $name;
     }
-    $project = getCurrentUserData($con, $projectId, getQueryIsProjExists());
+    $project = getCurrentUserData($con, [$projectId, $currentUserId], getQueryIsProjExists());
     if (empty($project)) {
         return 'Такого проекта не существует';
     }

@@ -1,14 +1,13 @@
 <?php
-
 require_once 'helpers.php';
 require_once 'init.php';
 session_start();
 
 $titleName = 'Дела в порядке';
-
-$currentUserName = '';
 $currentUserId = '';
+$currentUserName = '';
 $currentUserEmail = '';
+
 if(!empty($_SESSION['user']['id'])){
     $currentUserId = $_SESSION['user']['id'];
     $currentUser = getUserDataById($con,$currentUserId);
@@ -21,11 +20,13 @@ $currentUserTasks = '';
 $errors = [];
 
 if(!$con){
+
     $error = mysqli_connect_error();
+
 }else {
 
-    $currentUserProjects = getCurrentUserData($con,$currentUserName,getQueryCurrentUserProjects());
-    $currentUserTasks = getCurrentUserData($con,$currentUserName,getQueryCurrentUserTasks());
+    $currentUserProjects = getCurrentUserData($con,$currentUserId,getQueryCurrentUserProjects());
+    $currentUserTasks = getCurrentUserData($con,$currentUserId,getQueryCurrentUserTasks());
 
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -36,12 +37,12 @@ if(!$con){
                 return validateFilled($value);
             },
             // TODO: Сделать читабельнее
-            'project' => function($value) use ($con) {
+            'project' => function($value) use ($con,$currentUserId) {
                 if(validateFilled($value)){
                     return validateFilled($value);
                 }
-                if(isProjExists($con, $value)){
-                    return isProjExists($con, $value);
+                if(isProjExists($con, $value, $currentUserId)){
+                    return isProjExists($con, $value, $currentUserId);
                 }
             },
             // TODO: Сделать читабельнее
