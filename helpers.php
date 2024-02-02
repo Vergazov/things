@@ -347,11 +347,27 @@ function getQuerySearchTaskById(): string
 }
 
 /**
+ * @return string . возвращает запрос для поиска задач всех задач у текущего пользователя отфильтрованный по проектам
+ */
+function getQuerySearchAllTasksByProject(): string
+{
+    return 'SELECT * FROM things_are_fine.tasks WHERE user_id = ? AND project_id = ?';
+}
+
+/**
  * @return string . возвращает запрос для поиска задач на сегодня у текущего пользователя
  */
 function getQuerySearchTodayTasks(): string
 {
     return 'SELECT * FROM things_are_fine.tasks WHERE completion_date = CURDATE() AND user_id = ?';
+}
+
+/**
+ * @return string . возвращает запрос для поиска задач на сегодня у текущего пользователя отфильтрованный по проектам
+ */
+function getQuerySearchTodayTasksByProject(): string
+{
+    return 'SELECT * FROM things_are_fine.tasks WHERE completion_date = CURDATE() AND user_id = ? AND project_id = ?';
 }
 
 /**
@@ -363,11 +379,27 @@ function getQuerySearchTomorrowTasks(): string
 }
 
 /**
+ * @return string . возвращает запрос для поиска задач на завтра у текущего пользователя отфильтрованный по проектам
+ */
+function getQuerySearchTomorrowTasksByProject(): string
+{
+    return 'SELECT * FROM things_are_fine.tasks WHERE completion_date = DATE_ADD(CURDATE(), INTERVAL 1 DAY) AND user_id = ? AND project_id = ?';
+}
+
+/**
  * @return string . возвращает запрос для поиска просроченных задач у текущего пользователя
  */
 function getQuerySearchOverdueTasks(): string
 {
     return 'SELECT * FROM things_are_fine.tasks WHERE completion_date < CURDATE() AND user_id = ?';
+}
+
+/**
+ * @return string . возвращает запрос для поиска просроченных задач у текущего пользователя отфильтрованный по проектам
+ */
+function getQuerySearchOverdueTasksByProject(): string
+{
+    return 'SELECT * FROM things_are_fine.tasks WHERE completion_date < CURDATE() AND user_id = ? AND project_id = ?';
 }
 
 /**
