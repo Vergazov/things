@@ -1,6 +1,5 @@
 <section class="content__side">
     <h2 class="content__side-heading">Проекты</h2>
-
     <nav class="main-navigation">
         <ul class="main-navigation__list">
             <?php foreach($currentUserProjects as $project): ?>
@@ -27,12 +26,13 @@
 
     <div class="tasks-controls">
         <nav class="tasks-switch">
-            <a href="<?=getAbsolutePath('index.php')?>" class="tasks-switch__item">Все задачи</a>
-            <a href="<?=getAbsolutePath('index.php')?>?filter=today" class="tasks-switch__item
+            <a href="<?=getAbsolutePath('index.php')?>?filter=all_tasks<?php if(!empty($projectId)): ?>&project_id=<?=$projectId?> <?php endif; ?>" class="tasks-switch__item
+            <?php if($filter === 'all_tasks'):?> <?='tasks-switch__item--active'?><?php endif ?>"">Все задачи</a>
+            <a href="<?=getAbsolutePath('index.php')?>?filter=today<?php if(!empty($projectId)): ?>&project_id=<?=$projectId?> <?php endif; ?>" class="tasks-switch__item
             <?php if($filter === 'today'):?> <?='tasks-switch__item--active'?><?php endif ?>">Повестка дня</a>
-            <a href="<?=getAbsolutePath('index.php')?>?filter=tomorrow" class="tasks-switch__item
+            <a href="<?=getAbsolutePath('index.php')?>?filter=tomorrow<?php if(!empty($projectId)): ?>&project_id=<?=$projectId?> <?php endif; ?>" class="tasks-switch__item
             <?php if($filter === 'tomorrow'):?> <?='tasks-switch__item--active'?><?php endif ?>">Завтра</a>
-            <a href="<?=getAbsolutePath('index.php')?>?filter=overdue" class="tasks-switch__item
+            <a href="<?=getAbsolutePath('index.php')?>?filter=overdue<?php if(!empty($projectId)): ?>&project_id=<?=$projectId?> <?php endif; ?>" class="tasks-switch__item
             <?php if($filter === 'overdue'):?> <?='tasks-switch__item--active'?><?php endif ?>">Просроченные</a>
         </nav>
 
