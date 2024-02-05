@@ -56,8 +56,8 @@
             <?php if(isTaskImportant($task['completion_date'])): ?>task--important <?php endif; ?>">
                 <td class="task__select">
                     <label class="checkbox task__checkbox">
-                        <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1">
-                        <a href="<?=getAbsolutePath('index.php')?>?task_id=<?=$task['id']?>"><span class="checkbox__text"><?=htmlspecialchars($task['name'])?></span></a>
+                        <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="<?=$task['id']?>">
+                        <span class="checkbox__text"><?=htmlspecialchars($task['name'])?></span>
                     </label>
                 </td>
 

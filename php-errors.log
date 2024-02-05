@@ -1,0 +1,4 @@
+[05-Feb-2024 11:25:22 Europe/Moscow] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\index.php on line 45
+[05-Feb-2024 11:27:45 Europe/Moscow] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\index.php on line 45
+[05-Feb-2024 11:41:26 Europe/Moscow] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\index.php on line 46
+[05-Feb-2024 11:41:37 Europe/Moscow] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\index.php on line 46

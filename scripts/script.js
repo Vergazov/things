@@ -1,5 +1,4 @@
 'use strict';
-
 var $checkbox = document.getElementsByClassName('show_completed');
 
 if ($checkbox.length) {
@@ -9,7 +8,7 @@ if ($checkbox.length) {
     var searchParams = new URLSearchParams(window.location.search);
     searchParams.set('show_completed', is_checked);
 
-    window.location = '/index.php?' + searchParams.toString();
+    window.location = 'http://localhost:82/things/index.php?' + searchParams.toString();
   });
 }
 
@@ -23,8 +22,8 @@ if ($taskCheckboxes.length) {
 
       var is_checked = +el.checked;
       var task_id = el.getAttribute('value');
-
-      var url = '/index.php?task_id=' + task_id + '&check=' + is_checked;
+      console.log(task_id);
+      var url = 'http://localhost:82/things/index.php?task_id=' + task_id + '&check=' + is_checked;
       window.location = url;
     }
   });

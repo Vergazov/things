@@ -1,9 +1,19 @@
 <?php
 require_once 'helpers.php';
 require_once 'init.php';
+//Показ и логирование всех ошибок
+//ini_set('display_errors', '1');
+//ini_set('display_startup_errors', '1');
+//error_reporting(E_ALL);
+//ini_set('error_log', __DIR__ . '/php-errors.log');
 session_start();
-// показывать или нет выполненные задачи
-$show_complete_tasks = rand(0, 1);
+$showCompleted = filter_input(INPUT_GET,'show_completed');
+if($showCompleted){
+    $show_complete_tasks = 1;
+}else{
+    $show_complete_tasks = 0;
+}
+//$show_complete_tasks = rand(0, 1);
 $titleName = 'Дела в порядке';
 $currentUserId = '';
 $currentUserName = '';
