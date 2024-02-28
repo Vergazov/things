@@ -1,5 +1,5 @@
 .idea
 .git
-/uploads/*
-vendor/
 .env
+/uploads/*
+/vendor/
