@@ -12,7 +12,7 @@
                     <p>После создания аккаунта, пользователь может начать вносить свои дела, деля их по проектам и указывая сроки.</p>
                 </div>
 
-                <a class="welcome__button button" href="<?=getAbsolutePath('register.php')?>">Зарегистрироваться</a>
+                <a class="welcome__button button" href="<?=getAbsolutePath('/register.php')?>">Зарегистрироваться</a>
             </section>
         </div>
     </div>

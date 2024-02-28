@@ -1,12 +1,12 @@
 <?php
-require_once 'helpers.php';
+session_start();
+require_once 'functions/helpers.php';
 require_once 'init.php';
 //Показ и логирование всех ошибок
 //ini_set('display_errors', '1');
 //ini_set('display_startup_errors', '1');
 //error_reporting(E_ALL);
 //ini_set('error_log', __DIR__ . '/php-errors.log');
-session_start();
 $showCompleted = filter_input(INPUT_GET,'show_completed');
 if($showCompleted){
     $show_complete_tasks = 1;

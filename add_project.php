@@ -1,7 +1,7 @@
 <?php
+session_start();
 require_once 'helpers.php';
 require_once 'init.php';
-session_start();
 
 $titleName = 'Дела в порядке';
 $currentUserName = '';

@@ -32,7 +32,6 @@ function is_date_valid(string $date): bool
  */
 function db_get_prepare_stmt($link, $sql, $data = [])
 {
-//    dd($data);
     $stmt = mysqli_prepare($link, $sql);
 
     if ($stmt === false) {
@@ -405,11 +404,11 @@ function getQuerySearchOverdueTasksByProject(): string
 /**
  * Проверка поля с датой на соответствие формату ГГГГ-ММ-ДД
  * @param $name . Название ключа в $_POST массиве, по которому будем искать дату
- * @return bool|string|null
+ * @return string|null
  * Возвращает null если формат даты верный, либо если дата не была указана при создании задачи
  * Если формат неверный, возвращает сообщение об ошибке
  */
-function validateDateFormat($name): bool|string|null
+function validateDateFormat($name): string|null
 {
     $format = 'Y-m-d';
     $date = $_POST[$name];
