@@ -8,9 +8,9 @@
  */
 function isProjExists($con, $name, $currentUserId): string|null
 {
-    if(!empty($_POST[$name])){
+    if (!empty($_POST[$name])) {
         $projectId = $_POST[$name];
-    }else{
+    } else {
         $projectId = $name;
     }
     $project = getCurrentUserData($con, [$projectId, $currentUserId], getQueryIsProjExists());
@@ -55,19 +55,36 @@ function isEmailExists($con, $name): string|null
 }
 
 /**
- * Проверяет при аутентификации, существует ли такая почта. Если да, то все ок, если нет, значит такого пользователя нет
- * @param $con
- * @param $name
- * @return string|null Если находит почту, возвращает null, если не находит, то сообщение об ошибке
+ * Проверяет при аутентификации, существует ли такая почта в базе данных
+ * @param $con . Ресурс соединения с БД
+ * @param $name . Название ключа в $_POST массиве, по которому будем искать почту
+ * @return bool Если находит почту, возвращает true, если нет - false
  */
-function isEmailExistsForAuth($con, $name): string|null
+function isEmailExistsForAuth($con, $name):bool
 {
-    $emailFromForm = $_POST[$name];
-    $emailFromBase = getCurrentUserData($con, $emailFromForm, getQueryIsEmailExists());
+    $emailForCheck = $_POST[$name];
+    $emailFromBase = getCurrentUserData($con, $emailForCheck, getQueryIsEmailExists());
     if (empty($emailFromBase)) {
-        return 'Пользователя c таким почтовым ящиком не существует';
+        return false;
     }
-    return null;
+    return true;
+}
+
+/**
+ * Проверяет чтобы поля были заполнены, так же удаляет лишние пробелы из начала и конца строки
+ * @param $key . Название ключа в $_POST массиве, по которому будем искать проверяемое поле
+ * @return bool Если проверяемое по ключу в $_POST массиве поле пустое, то возвращает false. Иначе, возвращает true
+ */
+function validateFilled($key):bool
+{
+    $fieldForCheck = $_POST[$key];
+    $fieldForCheck = trim($fieldForCheck);
+
+    if (empty($fieldForCheck)) {
+        return false;
+    }
+
+    return true;
 }
 
 /**
@@ -132,16 +149,4 @@ function validateDateRange($name): null|string
     return null;
 }
 
-/**
- * Проверяет чтобы поля были заполнены, так же удаляет лишние пробелы из начала и конца строки
- * @param $name . Название ключа в $_POST массиве, по которому будем искать проверяемое поле
- * @return string|null Если проверяемое в $_POST массиве поле, пустое, то возвращает текст ошибки. Иначе, возвращает null
- */
-function validateFilled($name): string|null
-{
-    if (empty(trim($_POST[$name]))) {
-        return "Это поле должно быть заполнено";
-    }
-    return null;
-}
 

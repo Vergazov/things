@@ -1,5 +1,7 @@
 <?php
-require_once 'functions/helpers.php';
+require_once 'functions/db.php';
+require_once 'functions/template.php';
+require_once 'functions/validators.php';
 require_once 'init.php';
 
 $titleName = 'Дела в порядке';

@@ -33,7 +33,7 @@
                         <?php if(isset($errors['password'])): ?> form__input--error <?php endif; ?>" type="password" name="password" id="password" value="" placeholder="Введите пароль">
                     </div>
 
-                    <div class="form__row form__row--controls">
+                    <div class="form__row">
                         <?php if(!empty($errors)): ?>
                             <p class="error-message">Пожалуйста, исправьте ошибки в форме</p>
                         <?php endif; ?>

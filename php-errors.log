@@ -1,0 +1,10 @@
+[28-Feb-2024 10:05:03 Europe/Moscow] PHP Fatal error:  Uncaught TypeError: mysqli_prepare(): Argument #1 ($mysql) must be of type mysqli, bool given in C:\xampp\htdocs\things\functions\db.php:14
+Stack trace:
+#0 C:\xampp\htdocs\things\functions\db.php(14): mysqli_prepare(false, 'SELECT * FROM t...')
+#1 C:\xampp\htdocs\things\functions\db.php(67): db_get_prepare_stmt(false, 'SELECT * FROM t...', Array)
+#2 C:\xampp\htdocs\things\functions\db.php(282): getCurrentUserData(false, 1, 'SELECT * FROM t...')
+#3 C:\xampp\htdocs\things\index.php(26): getUserDataById(false, 1)
+#4 {main}
+  thrown in C:\xampp\htdocs\things\functions\db.php on line 14
+[28-Feb-2024 10:05:12 Europe/Moscow] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\index.php on line 53
+[28-Feb-2024 10:05:26 Europe/Moscow] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\index.php on line 53

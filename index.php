@@ -1,12 +1,12 @@
 <?php
+
 session_start();
-require_once 'functions/helpers.php';
+require_once 'functions/db.php';
+require_once 'functions/template.php';
+require_once 'functions/validators.php';
 require_once 'init.php';
-//Показ и логирование всех ошибок
-//ini_set('display_errors', '1');
-//ini_set('display_startup_errors', '1');
-//error_reporting(E_ALL);
-//ini_set('error_log', __DIR__ . '/php-errors.log');
+
+
 $showCompleted = filter_input(INPUT_GET,'show_completed');
 if($showCompleted){
     $show_complete_tasks = 1;
@@ -38,7 +38,6 @@ $layOut = '';
 if (!$con) {
 
     $error = mysqli_connect_error();
-
 } else {
 
     $currentUserProjects = getCurrentUserData($con, $currentUserId, getQueryCurrentUserProjects());
