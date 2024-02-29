@@ -31,9 +31,9 @@ function isProjExistsByName($con, $name, $userId): string|null
     $projectName = $_POST[$name];
     $project = getCurrentUserData($con, [$projectName, $userId], getQueryIsProjExistsByName());
     if (!empty($project)) {
-        return 'Проект с таким названием уже есть';
+        return false;
     }
-    return null;
+    return true;
 }
 
 /**
