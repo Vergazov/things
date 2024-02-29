@@ -1,9 +1,9 @@
 <?php
 session_start();
-require_once 'functions/db.php';
-require_once 'functions/template.php';
-require_once 'functions/validators.php';
-require_once 'init.php';
+require_once '../functions/db.php';
+require_once '../functions/template.php';
+require_once '../functions/validators.php';
+require_once '../db/db.php';
 
 $titleName = 'Дела в порядке';
 $currentUserId = '';
@@ -58,7 +58,8 @@ if (!$con) {
             },
         ];
 
-        $task = filter_input_array(INPUT_POST, ['name' => FILTER_DEFAULT, 'project' => FILTER_DEFAULT, 'date' => FILTER_DEFAULT]);
+        $task = filter_input_array(INPUT_POST,
+            ['name' => FILTER_DEFAULT, 'project' => FILTER_DEFAULT, 'date' => FILTER_DEFAULT]);
 
         foreach ($task as $key => $value) {
             if (isset($rules[$key])) {
@@ -86,7 +87,8 @@ if (!$con) {
         move_uploaded_file($_FILES['file']['tmp_name'], $file_path . $file_name);
 
         if (empty($errors)) {
-            $stmt = db_get_prepare_stmt($con, getQueryAddTask(), [$task['name'], $fileUrl, $task['date'], $currentUserId, $task['project']]);
+            $stmt = db_get_prepare_stmt($con, getQueryAddTask(),
+                [$task['name'], $fileUrl, $task['date'], $currentUserId, $task['project']]);
             $res = mysqli_stmt_execute($stmt);
             if ($res) {
                 $taskId = mysqli_insert_id($con);

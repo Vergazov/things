@@ -1,16 +1,15 @@
 <?php
 
 session_start();
-require_once 'functions/db.php';
-require_once 'functions/template.php';
-require_once 'functions/validators.php';
-require_once 'init.php';
+require_once '../functions/db.php';
+require_once '../functions/template.php';
+require_once '../functions/validators.php';
+require_once '../db/db.php';
 
-
-$showCompleted = filter_input(INPUT_GET,'show_completed');
-if($showCompleted){
+$showCompleted = filter_input(INPUT_GET, 'show_completed');
+if ($showCompleted) {
     $show_complete_tasks = 1;
-}else{
+} else {
     $show_complete_tasks = 0;
 }
 //$show_complete_tasks = rand(0, 1);
@@ -48,7 +47,8 @@ if (!$con) {
 
         $ftSearchTask = trim(filter_input(INPUT_GET, 'ft_search'));
         if ($ftSearchTask !== '') {
-            $currentUserTasks = getCurrentUserData($con, [$ftSearchTask, $currentUserId], getQueryFtSearchCurrentUserTasks());
+            $currentUserTasks = getCurrentUserData($con, [$ftSearchTask, $currentUserId],
+                getQueryFtSearchCurrentUserTasks());
         }
 
         $filter = filter_input(INPUT_GET, 'filter');
@@ -66,7 +66,7 @@ if (!$con) {
         }
 
         $projectId = filter_input(INPUT_GET, 'project_id', FILTER_SANITIZE_NUMBER_INT);
-        if(!isset($filter)) {
+        if (!isset($filter)) {
             if ($projectId) {
                 $currentUserTasks = getCurrentUserData($con, $projectId, getQueryFilteredByProjTasks());
                 $projExists = isProjExists($con, $projectId, $currentUserId);
@@ -79,19 +79,24 @@ if (!$con) {
             }
         }
 
-        $filterCombine = filter_input_array(INPUT_GET,['project_id' => FILTER_DEFAULT, 'filter' => FILTER_DEFAULT,],false);
-        if($filterCombine !== NULL && count($filterCombine) === 2){
+        $filterCombine = filter_input_array(INPUT_GET, ['project_id' => FILTER_DEFAULT, 'filter' => FILTER_DEFAULT,],
+            false);
+        if ($filterCombine !== null && count($filterCombine) === 2) {
             if ($filterCombine['filter'] === 'all_tasks') {
-                $currentUserTasks =  getCurrentUserData($con, [$currentUserId, $filterCombine['project_id']], getQuerySearchAllTasksByProject());
+                $currentUserTasks = getCurrentUserData($con, [$currentUserId, $filterCombine['project_id']],
+                    getQuerySearchAllTasksByProject());
             }
             if ($filterCombine['filter'] === 'today') {
-                $currentUserTasks =  getCurrentUserData($con, [$currentUserId, $filterCombine['project_id']], getQuerySearchTodayTasksByProject());
+                $currentUserTasks = getCurrentUserData($con, [$currentUserId, $filterCombine['project_id']],
+                    getQuerySearchTodayTasksByProject());
             }
             if ($filterCombine['filter'] === 'tomorrow') {
-                $currentUserTasks =  getCurrentUserData($con, [$currentUserId, $filterCombine['project_id']], getQuerySearchTomorrowTasksByProject());
+                $currentUserTasks = getCurrentUserData($con, [$currentUserId, $filterCombine['project_id']],
+                    getQuerySearchTomorrowTasksByProject());
             }
             if ($filterCombine['filter'] === 'overdue') {
-                $currentUserTasks =  getCurrentUserData($con, [$currentUserId, $filterCombine['project_id']], getQuerySearchOverdueTasksByProject());
+                $currentUserTasks = getCurrentUserData($con, [$currentUserId, $filterCombine['project_id']],
+                    getQuerySearchOverdueTasksByProject());
             }
         }
 

@@ -1,8 +1,8 @@
 <?php
-require_once 'functions/db.php';
-require_once 'functions/template.php';
-require_once 'functions/validators.php';
-require_once 'init.php';
+require_once '../functions/db.php';
+require_once '../functions/template.php';
+require_once '../functions/validators.php';
+require_once '../db/db.php';
 
 $titleName = 'Дела в порядке';
 $errors = [];

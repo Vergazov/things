@@ -8,7 +8,7 @@
  */
 function include_template(string $name, array $data = [])
 {
-    $name = 'templates/' . $name;
+    $name = '../templates/' . $name;
     $result = '';
 
     if (!is_readable($name)) {
