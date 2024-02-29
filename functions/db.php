@@ -92,7 +92,7 @@ function getQueryCurrentUserProjects(): string
  */
 function getQueryCurrentUserTasks(): string
 {
-    return 'SELECT tasks.id, tasks.name, tasks.completion_date, projects.name project, tasks.status FROM things_are_fine.tasks '
+    return 'SELECT tasks.id, tasks.name, tasks.completion_date,tasks.file, projects.name project, tasks.status FROM things_are_fine.tasks '
         . 'JOIN things_are_fine.users '
         . 'ON  tasks.user_id = users.id '
         . 'JOIN things_are_fine.projects '

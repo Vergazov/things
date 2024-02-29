@@ -15,9 +15,9 @@ function isProjExists($con, $name, $currentUserId): string|null
     }
     $project = getCurrentUserData($con, [$projectId, $currentUserId], getQueryIsProjExists());
     if (empty($project)) {
-        return 'Такого проекта не существует';
+        return false;
     }
-    return null;
+    return true;
 }
 
 /**
@@ -110,7 +110,7 @@ function validateEmailFormat($name): null|string
  * Возвращает null если формат даты верный, либо если дата не была указана при создании задачи
  * Если формат неверный, возвращает сообщение об ошибке
  */
-function validateDateFormat($name): string|null
+function validateDateFormat($name): string|null|bool
 {
     $format = 'Y-m-d';
     $date = $_POST[$name];
@@ -121,10 +121,10 @@ function validateDateFormat($name): string|null
 
     $rightFormatDate = DateTime::createFromFormat($format, $date);
     if ($rightFormatDate === false) {
-        return 'Введенная дата не соответствует формату ГГГГ-ММ-ДД';
+        return false;
     }
 
-    return null;
+    return true;
 }
 
 /**
@@ -132,7 +132,7 @@ function validateDateFormat($name): string|null
  * @param $name . Название ключа в $_POST массиве, по которому будем искать дату
  * @return string|null Если дата не соответствует условию, выводит ошибку.
  */
-function validateDateRange($name): null|string
+function validateDateRange($name): null|string|bool
 {
     $format = 'Y-m-d';
     $date = $_POST[$name];
@@ -143,10 +143,11 @@ function validateDateRange($name): null|string
 
     $curDate = date($format);
     if (strtotime($date) < strtotime($curDate)) {
-        return 'Дата выполнения должна быть больше или равна текущей';
+        return false;
     }
 
-    return null;
+    return true;
+
 }
 
 

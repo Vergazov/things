@@ -86,3 +86,9 @@ function dd($data)
     print_r($data);
     echo '</pre>';
 }
+
+function getFileName($fileUrl): string
+{
+    $fileName = explode('/',$fileUrl);
+    return $fileName[1];
+}

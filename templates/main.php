@@ -62,18 +62,10 @@
                 </td>
 
                 <td class="task__file">
-                    <a class="download-link"
-                       href="
-                          <?php if(isset($_GET['fileUrl'])):?>
-                          <?php if($_GET['taskId'] == $task['id']): ?>
-                            <?=$_GET['fileUrl']?>
-                          <?php endif; ?>
-                          <?php else: ?>
-                            <?= '#' ?>
-                          <?php endif;?>
-                       ">Ссылка на файл</a>
+                    <?php if(!empty($task['file'])): ?>
+                        <a class="download-link" href="<?=$task['file']?>"><?=getFileName($task['file'])?></a>
+                    <?php endif; ?>
                 </td>
-
                 <td class="task__date"><?=htmlspecialchars($task['completion_date'])?></td>
             </tr>
         <?php endforeach; ?>

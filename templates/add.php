@@ -19,7 +19,7 @@
     <main class="content__main">
         <h2 class="content__main-heading">Добавление задачи</h2>
 
-        <form class="form"  action="http://localhost:82/things/add.php" method="post" autocomplete="off" enctype="multipart/form-data">
+        <form class="form"  action="<?=getAbsolutePath('add.php')?>" method="post" autocomplete="off" enctype="multipart/form-data">
             <div class="form__row">
                 <?php if(isset($errors['name'])): ?>
                     <p class="form__message"><?=$errors['name']?></p>
@@ -59,7 +59,6 @@
 
             <div class="form__row">
                 <label class="form__label" for="file">Файл</label>
-
                 <div class="form__input-file">
                     <input class="visually-hidden" type="file" name="file" id="file" value="">
 

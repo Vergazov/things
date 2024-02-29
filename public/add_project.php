@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors[$key] = "Заполните поле $key";
         }
 
-        if (in_array($key, $exists, true) && empty($errors[$key]) && !isProjExistsByName($con, $key,$currentUserId)) {
+        if (in_array($key, $exists, true) && empty($errors[$key]) && !isProjExistsByName($con, $key, $currentUserId)) {
             $errors[$key] = "Такой проект уже существует";
         }
     }
@@ -61,7 +61,6 @@ if (empty($_SESSION['user']['id'])) {
         'titleName' => $titleName,
     ]);
 } else {
-
     $content = include_template('add_project.php', [
         'currentUserProjects' => $currentUserProjects,
         'tasksForCount' => $currentUserTasks,

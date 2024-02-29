@@ -40,7 +40,8 @@ $currentUserTasks = $currentUserAllTasks;
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-    $ftSearchTask = trim(filter_input(INPUT_GET, 'ft_search'));
+    $ftSearchTask = filter_input(INPUT_GET, 'ft_search');
+    $ftSearchTask = trim($ftSearchTask);
     if ($ftSearchTask !== '') {
         $currentUserTasks = getCurrentUserData($con, [$ftSearchTask, $currentUserId],
             getQueryFtSearchCurrentUserTasks());

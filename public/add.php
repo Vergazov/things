@@ -28,47 +28,32 @@ $currentUserTasks = getCurrentUserData($con, $currentUserId, getQueryCurrentUser
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $required = ['name', 'project'];
+    $exists = ['project'];
+    $format = ['date'];
+    $range = ['date'];
 
-    $rules = [
-        'name' => function ($value) {
-            return validateFilled($value);
-        },
-        // TODO: Сделать читабельнее
-        'project' => function ($value) use ($con, $currentUserId) {
-            if (validateFilled($value)) {
-                return validateFilled($value);
-            }
-            if (isProjExists($con, $value, $currentUserId)) {
-                return isProjExists($con, $value, $currentUserId);
-            }
-        },
-        // TODO: Сделать читабельнее
-        'date' => function ($value) {
-            if (validateDateFormat($value)) {
-                return validateDateFormat($value);
-            }
-            if (validateDateRange($value)) {
-                return validateDateRange($value);
-            }
-        },
-    ];
+    $newTask = filter_input_array(INPUT_POST,[
+        'name' => FILTER_DEFAULT,
+        'project' => FILTER_DEFAULT,
+        'date' => FILTER_DEFAULT
+    ]);
 
-    $task = filter_input_array(INPUT_POST,
-        ['name' => FILTER_DEFAULT, 'project' => FILTER_DEFAULT, 'date' => FILTER_DEFAULT]);
-
-    foreach ($task as $key => $value) {
-        if (isset($rules[$key])) {
-            $rule = $rules[$key];
-            $errors[$key] = $rule($key);
+    foreach ($newTask as $key => $value) {
+        if (in_array($key, $required, true) && !validateFilled($key)) {
+            $errors[$key] = "Заполните поле $key";
         }
-        // TODO Думаю можно сделать без этого куска кода. Подумать можно ли его запихнуть в функцию валидации validateFilled()
-        if (in_array($key, $required, true) && empty(trim($value))) {
-            $errors[$key] = "Поле $key должно быть заполнено";
+        if (in_array($key, $exists, true) && empty($errors[$key]) && !isProjExists($con, $key, $currentUserId)) {
+            $errors[$key] = "Такого проекта не существует";
+        }
+        if (in_array($key, $format, true) && empty($errors[$key]) && validateDateFormat($key) === false) {
+            $errors[$key] = "Введенная дата не соответствует формату ГГГГ-ММ-ДД";
+        }
+        if (in_array($key, $range, true) && empty($errors[$key]) && validateDateRange($key) === false) {
+            $errors[$key] = "Дата выполнения должна быть больше или равна текущей";
         }
     }
 
     $errors = array_filter($errors);
-
     $taskId = '';
     $file_path = '';
     $file_name = '';
@@ -82,19 +67,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     move_uploaded_file($_FILES['file']['tmp_name'], $file_path . $file_name);
 
     if (empty($errors)) {
-        $stmt = db_get_prepare_stmt($con, getQueryAddTask(),
-            [$task['name'], $fileUrl, $task['date'], $currentUserId, $task['project']]);
+
+        if(empty($newTask['date'])){
+            $newTask['date'] = null;
+        }
+
+        $stmt = db_get_prepare_stmt(
+            $con,
+            getQueryAddTask(),[
+                $newTask['name'],
+                $fileUrl,
+                $newTask['date'],
+                $currentUserId,
+                $newTask['project']
+            ]);
+
         $res = mysqli_stmt_execute($stmt);
         if ($res) {
-            $taskId = mysqli_insert_id($con);
-            if ($fileUrl === '') {
-                header("Location:" . getAbsolutePath('index.php'));
-            } else {
-                header("Location:" . getAbsolutePath('index.php') . "?fileUrl=" . $fileUrl . "&taskId=" . $taskId);
-            }
+            header("Location:" . getAbsolutePath('index.php'));
         }
     }
-
 }
 
 if (empty($_SESSION['user']['id'])) {
