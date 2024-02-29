@@ -21,46 +21,42 @@ $currentUserProjects = '';
 $currentUserTasks = '';
 $errors = [];
 
-if (!$con) {
-    $error = mysqli_connect_error();
-} else {
-    $currentUserProjects = getCurrentUserData($con, $currentUserId, getQueryCurrentUserProjects());
-    $currentUserTasks = getCurrentUserData($con, $currentUserId, getQueryCurrentUserTasks());
+$currentUserProjects = getCurrentUserData($con, $currentUserId, getQueryCurrentUserProjects());
+$currentUserTasks = getCurrentUserData($con, $currentUserId, getQueryCurrentUserTasks());
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-        $required = ['project_name'];
+    $required = ['project_name'];
 
-        $rules = [
-            'project_name' => function ($value) use ($con, $currentUserId) {
-                if (validateFilled($value)) {
-                    return validateFilled($value);
-                }
-                if (isProjExistsByName($con, $value, $currentUserId)) {
-                    return isProjExistsByName($con, $value, $currentUserId);
-                }
-            },
-        ];
-
-        $project = filter_input_array(INPUT_POST, ['project_name' => FILTER_DEFAULT]);
-        foreach ($project as $key => $value) {
-            if (isset($rules[$key])) {
-                $rule = $rules[$key];
-                $errors[$key] = $rule($key);
+    $rules = [
+        'project_name' => function ($value) use ($con, $currentUserId) {
+            if (validateFilled($value)) {
+                return validateFilled($value);
             }
-            // TODO Думаю можно сделать без этого куска кода. Подумать можно ли его запихнуть в функцию валидации validateFilled()
-            if (in_array($key, $required, true) && empty(trim($value))) {
-                $errors[$key] = "Поле $key должно быть заполнено";
+            if (isProjExistsByName($con, $value, $currentUserId)) {
+                return isProjExistsByName($con, $value, $currentUserId);
             }
+        },
+    ];
+
+    $project = filter_input_array(INPUT_POST, ['project_name' => FILTER_DEFAULT]);
+    foreach ($project as $key => $value) {
+        if (isset($rules[$key])) {
+            $rule = $rules[$key];
+            $errors[$key] = $rule($key);
         }
-        $errors = array_filter($errors);
+        // TODO Думаю можно сделать без этого куска кода. Подумать можно ли его запихнуть в функцию валидации validateFilled()
+        if (in_array($key, $required, true) && empty(trim($value))) {
+            $errors[$key] = "Поле $key должно быть заполнено";
+        }
+    }
+    $errors = array_filter($errors);
 
-        if (empty($errors)) {
-            $stmt = db_get_prepare_stmt($con, getQueryAddProject(), [$project['project_name'], $currentUserId]);
-            $res = mysqli_stmt_execute($stmt);
-            if ($res) {
-                header("Location:" . getAbsolutePath('index.php'));
-            }
+    if (empty($errors)) {
+        $stmt = db_get_prepare_stmt($con, getQueryAddProject(), [$project['project_name'], $currentUserId]);
+        $res = mysqli_stmt_execute($stmt);
+        if ($res) {
+            header("Location:" . getAbsolutePath('index.php'));
         }
     }
 }

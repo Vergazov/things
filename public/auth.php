@@ -6,46 +6,37 @@ require_once '../db/db.php';
 
 $titleName = 'Дела в порядке';
 $errors = [];
-if (!$con) {
-    $error = mysqli_connect_error();
-} else {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-        $required = ['email', 'password'];
-        $exists = ['email'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-        $dataForAuth = filter_input_array(INPUT_POST, ['email' => FILTER_DEFAULT, 'password' => FILTER_DEFAULT]);
+    $required = ['email', 'password'];
+    $exists = ['email'];
 
-        foreach ($dataForAuth as $key => $value) {
+    $dataForAuth = filter_input_array(INPUT_POST, ['email' => FILTER_DEFAULT, 'password' => FILTER_DEFAULT]);
 
-            if (in_array($key, $required, true)) {
-                $isFilled = validateFilled($key);
-                if (!$isFilled) {
-                    $errors[$key] = "Заполните поле $key";
-                }
-            }
-            if (in_array($key, $exists, true) && empty($errors[$key])) {
-                $isEmailExists = isEmailExistsForAuth($con, $key);
-                if (!$isEmailExists) {
-                    $errors[$key] = "Вы ввели неверный $key";
-                }
-            }
+    foreach ($dataForAuth as $key => $value) {
+
+        if (in_array($key, $required, true) && !validateFilled($key)) {
+            $errors[$key] = "Заполните поле $key";
         }
+        if (in_array($key, $exists, true) && empty($errors[$key]) && !isEmailExistsForAuth($con, $key)) {
+            $errors[$key] = "Вы ввели неверный $key";
+        }
+    }
 
-        $errors = array_filter($errors);
+    $errors = array_filter($errors);
 
-        if (empty($errors)) {
-            $userData = getUserDataByEmail($con, $dataForAuth['email']);
-            if (password_verify($dataForAuth['password'], $userData['password'])) {
+    if (empty($errors)) {
+        $userData = getUserDataByEmail($con, $dataForAuth['email']);
+        if (password_verify($dataForAuth['password'], $userData['password'])) {
 
-                $session = session_start();
-                $_SESSION['user']['id'] = $userData['id'];
+            $session = session_start();
+            $_SESSION['user']['id'] = $userData['id'];
 
-                header("Location:" . getAbsolutePath('index.php'));
+            header("Location:" . getAbsolutePath('index.php'));
 
-            } else {
-                $errors['password'] = 'Вы ввели неверный пароль';
-            }
+        } else {
+            $errors['password'] = 'Вы ввели неверный пароль';
         }
     }
 }

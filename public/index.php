@@ -34,83 +34,77 @@ $filter = '';
 $filterCombine = [];
 $layOut = '';
 
-if (!$con) {
+$currentUserProjects = getCurrentUserData($con, $currentUserId, getQueryCurrentUserProjects());
+$currentUserAllTasks = getCurrentUserData($con, $currentUserId, getQueryCurrentUserTasks());
+$currentUserTasks = $currentUserAllTasks;
 
-    $error = mysqli_connect_error();
-} else {
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-    $currentUserProjects = getCurrentUserData($con, $currentUserId, getQueryCurrentUserProjects());
-    $currentUserAllTasks = getCurrentUserData($con, $currentUserId, getQueryCurrentUserTasks());
-    $currentUserTasks = $currentUserAllTasks;
+    $ftSearchTask = trim(filter_input(INPUT_GET, 'ft_search'));
+    if ($ftSearchTask !== '') {
+        $currentUserTasks = getCurrentUserData($con, [$ftSearchTask, $currentUserId],
+            getQueryFtSearchCurrentUserTasks());
+    }
 
-    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $filter = filter_input(INPUT_GET, 'filter');
+    if ($filter === 'all_tasks') {
+        $currentUserTasks = $currentUserAllTasks;
+    }
+    if ($filter === 'today') {
+        $currentUserTasks = getCurrentUserData($con, $currentUserId, getQuerySearchTodayTasks());
+    }
+    if ($filter === 'tomorrow') {
+        $currentUserTasks = getCurrentUserData($con, $currentUserId, getQuerySearchTomorrowTasks());
+    }
+    if ($filter === 'overdue') {
+        $currentUserTasks = getCurrentUserData($con, $currentUserId, getQuerySearchOverdueTasks());
+    }
 
-        $ftSearchTask = trim(filter_input(INPUT_GET, 'ft_search'));
-        if ($ftSearchTask !== '') {
-            $currentUserTasks = getCurrentUserData($con, [$ftSearchTask, $currentUserId],
-                getQueryFtSearchCurrentUserTasks());
-        }
-
-        $filter = filter_input(INPUT_GET, 'filter');
-        if ($filter === 'all_tasks') {
-            $currentUserTasks = $currentUserAllTasks;
-        }
-        if ($filter === 'today') {
-            $currentUserTasks = getCurrentUserData($con, $currentUserId, getQuerySearchTodayTasks());
-        }
-        if ($filter === 'tomorrow') {
-            $currentUserTasks = getCurrentUserData($con, $currentUserId, getQuerySearchTomorrowTasks());
-        }
-        if ($filter === 'overdue') {
-            $currentUserTasks = getCurrentUserData($con, $currentUserId, getQuerySearchOverdueTasks());
-        }
-
-        $projectId = filter_input(INPUT_GET, 'project_id', FILTER_SANITIZE_NUMBER_INT);
-        if (!isset($filter)) {
-            if ($projectId) {
-                $currentUserTasks = getCurrentUserData($con, $projectId, getQueryFilteredByProjTasks());
-                $projExists = isProjExists($con, $projectId, $currentUserId);
-                if (empty($currentUserTasks) && $projExists !== null) {
-                    return http_response_code(404);
-                }
-            }
-            if ($projectId === '') {
+    $projectId = filter_input(INPUT_GET, 'project_id', FILTER_SANITIZE_NUMBER_INT);
+    if (!isset($filter)) {
+        if ($projectId) {
+            $currentUserTasks = getCurrentUserData($con, $projectId, getQueryFilteredByProjTasks());
+            $projExists = isProjExists($con, $projectId, $currentUserId);
+            if (empty($currentUserTasks) && $projExists !== null) {
                 return http_response_code(404);
             }
         }
-
-        $filterCombine = filter_input_array(INPUT_GET, ['project_id' => FILTER_DEFAULT, 'filter' => FILTER_DEFAULT,],
-            false);
-        if ($filterCombine !== null && count($filterCombine) === 2) {
-            if ($filterCombine['filter'] === 'all_tasks') {
-                $currentUserTasks = getCurrentUserData($con, [$currentUserId, $filterCombine['project_id']],
-                    getQuerySearchAllTasksByProject());
-            }
-            if ($filterCombine['filter'] === 'today') {
-                $currentUserTasks = getCurrentUserData($con, [$currentUserId, $filterCombine['project_id']],
-                    getQuerySearchTodayTasksByProject());
-            }
-            if ($filterCombine['filter'] === 'tomorrow') {
-                $currentUserTasks = getCurrentUserData($con, [$currentUserId, $filterCombine['project_id']],
-                    getQuerySearchTomorrowTasksByProject());
-            }
-            if ($filterCombine['filter'] === 'overdue') {
-                $currentUserTasks = getCurrentUserData($con, [$currentUserId, $filterCombine['project_id']],
-                    getQuerySearchOverdueTasksByProject());
-            }
+        if ($projectId === '') {
+            return http_response_code(404);
         }
+    }
 
-        $taskId = filter_input(INPUT_GET, 'task_id', FILTER_SANITIZE_NUMBER_INT);
-        if ($taskId) {
-            $task = getCurrentUserData($con, [$taskId, $currentUserId], getQuerySearchTaskById());
-            if ($task[0]['status'] === 0) {
-                $taskStatus = 1;
-            }
-            $stmt = db_get_prepare_stmt($con, getQueryInvertTaskStatus(), [$taskStatus, $taskId]);
-            $taskForInvert = mysqli_stmt_execute($stmt);
-            if ($taskForInvert) {
-                header("Location:" . getAbsolutePath('index.php'));
-            }
+    $filterCombine = filter_input_array(INPUT_GET, ['project_id' => FILTER_DEFAULT, 'filter' => FILTER_DEFAULT,],
+        false);
+    if ($filterCombine !== null && count($filterCombine) === 2) {
+        if ($filterCombine['filter'] === 'all_tasks') {
+            $currentUserTasks = getCurrentUserData($con, [$currentUserId, $filterCombine['project_id']],
+                getQuerySearchAllTasksByProject());
+        }
+        if ($filterCombine['filter'] === 'today') {
+            $currentUserTasks = getCurrentUserData($con, [$currentUserId, $filterCombine['project_id']],
+                getQuerySearchTodayTasksByProject());
+        }
+        if ($filterCombine['filter'] === 'tomorrow') {
+            $currentUserTasks = getCurrentUserData($con, [$currentUserId, $filterCombine['project_id']],
+                getQuerySearchTomorrowTasksByProject());
+        }
+        if ($filterCombine['filter'] === 'overdue') {
+            $currentUserTasks = getCurrentUserData($con, [$currentUserId, $filterCombine['project_id']],
+                getQuerySearchOverdueTasksByProject());
+        }
+    }
+
+    $taskId = filter_input(INPUT_GET, 'task_id', FILTER_SANITIZE_NUMBER_INT);
+    if ($taskId) {
+        $task = getCurrentUserData($con, [$taskId, $currentUserId], getQuerySearchTaskById());
+        if ($task[0]['status'] === 0) {
+            $taskStatus = 1;
+        }
+        $stmt = db_get_prepare_stmt($con, getQueryInvertTaskStatus(), [$taskStatus, $taskId]);
+        $taskForInvert = mysqli_stmt_execute($stmt);
+        if ($taskForInvert) {
+            header("Location:" . getAbsolutePath('index.php'));
         }
     }
 }

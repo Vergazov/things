@@ -101,7 +101,7 @@
         </div>
     </div>
 </footer>
-<script src="../things/scripts/flatpickr.js"></script>
-<script src="../things/scripts/script.js"></script>
+<script src="/things/public/scripts/flatpickr.js"></script>
+<script src="/things/public/scripts/script.js"></script>
 </body>
 </html>
