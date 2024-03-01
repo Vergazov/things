@@ -43,11 +43,17 @@ function countTasksForProject($tasks, $project): int
 /**
  * Определяет является ли задача срочной.
  * Задача считается срочной если до даты выполнения остается 24 часа или меньше.
- * @param $date
- * @return bool Если срочная то true, если не срочная, то false
+ * @param $date : дата выполнения задачи
+ * @return bool Если задача срочная, возвращает true,
+ * Если не срочная то возвращает false,
+ * Если дата выполнения не была передана, то возвращает false
  */
 function isTaskImportant($date): bool
 {
+    if($date === null){
+        return false;
+    }
+
     $dateDiff = (strtotime($date) - time()) / 3600;
     return $dateDiff <= 24;
 }

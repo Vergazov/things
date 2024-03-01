@@ -27,7 +27,8 @@
                 <label class="form__label" for="name" >Название <sup>*</sup></label>
 
                 <input class="form__input
-                <?php if(isset($errors['name'])): ?> form__input--error <?php endif; ?>" type="text" name="name" id="name" value="<?=getPostVal('name')?>" placeholder="Введите название">
+                <?php if(isset($errors['name'])): ?> form__input--error <?php endif; ?>"
+                       type="text" name="name" id="name" value="<?=getPostVal('name')?>" placeholder="Введите название">
             </div>
 
             <div class="form__row">
@@ -39,7 +40,6 @@
                 <select class="form__input form__input--select
                 <?php if(isset($errors['project'])): ?> form__input--error <?php endif; ?>" name="project" id="project">
                     <option value=""></option>
-                    <option value="10">Хацкер</option>
                     <?php foreach($currentUserProjects as $project): ?>
                         <option value="<?=$project['id']?>"
                             <?php if(getPostVal('project') == $project['id']): ?> selected <?php endif; ?> ><?=$project['name']?></option>
