@@ -13,7 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $exists = ['email'];
 
     $dataForAuth = filter_input_array(INPUT_POST, ['email' => FILTER_DEFAULT, 'password' => FILTER_DEFAULT]);
-
     foreach ($dataForAuth as $key => $value) {
 
         if (in_array($key, $required, true) && isFilled($key) === false) {
@@ -29,12 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors)) {
         $userData = getUserDataByEmail($con, $dataForAuth['email']);
         if (password_verify($dataForAuth['password'], $userData['password'])) {
-
             $session = session_start();
             $_SESSION['user']['id'] = $userData['id'];
-
             header("Location:" . getAbsolutePath('index.php'));
-
         } else {
             $errors['password'] = 'Вы ввели неверный пароль';
         }

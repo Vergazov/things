@@ -9,12 +9,10 @@ require_once '../db/db.php';
 $titleName = 'Дела в порядке';
 $currentUserId = '';
 $currentUserName = '';
-$currentUserEmail = '';
 
 if (!empty($_SESSION['user']['id'])) {
     $currentUserId = $_SESSION['user']['id'];
     $currentUser = getUserDataById($con, $currentUserId);
-    $currentUserEmail = $currentUser['email'];
     $currentUserName = $currentUser['name'];
 }
 

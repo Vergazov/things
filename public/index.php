@@ -1,6 +1,6 @@
 <?php
-
 session_start();
+
 require_once '../functions/db.php';
 require_once '../functions/template.php';
 require_once '../functions/validators.php';
@@ -12,16 +12,14 @@ if ($showCompleted) {
 } else {
     $show_complete_tasks = 0;
 }
-//$show_complete_tasks = rand(0, 1);
+
 $titleName = 'Дела в порядке';
 $currentUserId = '';
 $currentUserName = '';
-$currentUserEmail = '';
 
 if (!empty($_SESSION['user']['id'])) {
     $currentUserId = $_SESSION['user']['id'];
     $currentUser = getUserDataById($con, $currentUserId);
-    $currentUserEmail = $currentUser['email'];
     $currentUserName = $currentUser['name'];
 }
 
@@ -68,12 +66,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $projExists = isProjExistsByIdForFilter($con, $projectId, $currentUserId);
             if (empty($currentUserTasks) && !$projExists) {
                 return http_response_code(404);
-                //TODO: вывести шаблон
             }
         }
         if ($projectId === '') {
             return http_response_code(404);
-            //TODO: вывести шаблон
         }
     }
 
@@ -135,5 +131,4 @@ if (empty($_SESSION['user']['id'])) {
         'content' => $content,
     ]);
 }
-
 print($layOut);
