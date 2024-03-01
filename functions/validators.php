@@ -1,81 +1,11 @@
 <?php
 
 /**
- * Проверка существует ли проект. Осуществляется по id проекта в базе
- * @param $con . Ресурс соединения с БД
- * @param $name . Название ключа в $_POST массиве, по которому будем искать id проекта
- * @return string|null Возвращает либо ошибку о том что проекта нету либо null если проект существует
+ * Проверяет чтобы поля были заполнены. Удаляет пробелы из начала и конца строки
+ * @param $key : Имя ключа в $_POST массиве, по которому получаем значение проверяемого поля
+ * @return bool Если поле не заполнено возвращает false, если заполнено возвращает true
  */
-function isProjExists($con, $name, $currentUserId): string|null
-{
-    if (!empty($_POST[$name])) {
-        $projectId = $_POST[$name];
-    } else {
-        $projectId = $name;
-    }
-    $project = getCurrentUserData($con, [$projectId, $currentUserId], getQueryIsProjExists());
-    if (empty($project)) {
-        return false;
-    }
-    return true;
-}
-
-/**
- * Проверка существует ли проект. Осуществляется по имени проекта в базе
- * @param $con . Ресурс соединения с БД
- * @param $name . Название ключа в $_POST массиве, по которому будем искать имя проекта
- * @return string|null Возвращает либо ошибку о том что проекта нету либо null если проект существует
- */
-function isProjExistsByName($con, $name, $userId): string|null
-{
-    $projectName = $_POST[$name];
-    $project = getCurrentUserData($con, [$projectName, $userId], getQueryIsProjExistsByName());
-    if (!empty($project)) {
-        return false;
-    }
-    return true;
-}
-
-/**
- * Проверяет почту в базе на дубликат
- * @param $con
- * @param $name
- * @return string|null
- * Если находит в базе почту идентичную той что ввел пользователь, то возвращает текст ошибки.
- * В противном случае возвращает null
- */
-function isEmailExists($con, $name): string|null
-{
-    $emailFromForm = $_POST[$name];
-    $emailFromBase = getCurrentUserData($con, $emailFromForm, getQueryIsEmailExists());
-    if (!empty($emailFromBase)) {
-        return 'Указанный почтовый ящик уже занят';
-    }
-    return null;
-}
-
-/**
- * Проверяет при аутентификации, существует ли такая почта в базе данных
- * @param $con . Ресурс соединения с БД
- * @param $name . Название ключа в $_POST массиве, по которому будем искать почту
- * @return bool Если находит почту, возвращает true, если нет - false
- */
-function isEmailExistsForAuth($con, $name):bool
-{
-    $emailForCheck = $_POST[$name];
-    $emailFromBase = getCurrentUserData($con, $emailForCheck, getQueryIsEmailExists());
-    if (empty($emailFromBase)) {
-        return false;
-    }
-    return true;
-}
-
-/**
- * Проверяет чтобы поля были заполнены, так же удаляет лишние пробелы из начала и конца строки
- * @param $key . Название ключа в $_POST массиве, по которому будем искать проверяемое поле
- * @return bool Если проверяемое по ключу в $_POST массиве поле пустое, то возвращает false. Иначе, возвращает true
- */
-function validateFilled($key):bool
+function isFilled($key):bool
 {
     $fieldForCheck = $_POST[$key];
     $fieldForCheck = trim($fieldForCheck);
@@ -88,32 +18,98 @@ function validateFilled($key):bool
 }
 
 /**
- * Проверяет email на соответствие формату
- * @param $name
- * @return string|null
- * Возвращает сообщение об ошибке если валидация не пройдена, если пройдена возвращает null
+ * Проверяет почту в базе на дубликат
+ * @param $con : Ресурс соединения
+ * @param $name : Имя ключа в $_POST массиве, по которому получаем название почты
+ * @return bool Если введенная пользователем почта уже существует в базе - возвращает true, если такой почты нет - возвращает false
  */
-function validateEmailFormat($name): null|string
+function isEmailExists($con, $name): bool
 {
-    $email = $_POST[$name];
+    $emailFromForm = $_POST[$name];
+    $emailFromBase = getCurrentUserData($con, $emailFromForm, getQueryIsEmailExists());
+    if (empty($emailFromBase)) {
+        return false;
+    }
+    return true;
+}
+
+/**
+ * Проверяет email на соответствие формату
+ * @param $key : Имя ключа в $_POST массиве, по которому получаем название почты
+ * @return bool : Если введенная почта некорректна - возвращает false, если корректна - возвращает true
+ */
+function isEmailValid($key): bool
+{
+    $email = $_POST[$key];
     $validate = filter_var($email, FILTER_VALIDATE_EMAIL);
     if ($validate === false) {
-        return 'Поле Email не соответствует формату';
+        return false;
     }
-    return null;
+    return true;
+}
+
+/**
+ * Проверяет существует ли такой проект у текущего пользователя. Осуществляется по имени проекта
+ * @param $con : Ресурс соединения с БД
+ * @param $key : Имя ключа в $_POST массиве, по которому получаем значение названия проекта
+ * @param $currentUserId : id текущего пользователя
+ * @return bool Если введенный пользователем проект уже есть в базе - возвращает true, если такого проекта нет - возвращает false
+ */
+function isProjExistsByName($con, $key, $currentUserId): bool
+{
+    $projectName = $_POST[$key];
+    $project = getCurrentUserData($con, [$projectName, $currentUserId], getQueryIsProjExistsByName());
+    if (empty($project)) {
+        return false;
+    }
+    return true;
+}
+
+/**
+ * Проверяет существует ли такой проект у текущего пользователя. Осуществляется по id проекта
+ * @param $con : Ресурс соединения с БД
+ * @param $key : Имя ключа в $_POST массиве, по которому получаем значение id проекта.
+ * @param $currentUserId : id текущего пользователя
+ * @return bool Если введенный пользователем проект уже есть в базе - возвращает true, если такого проекта нет - возвращает false
+ */
+function isProjExistsById($con, $key, $currentUserId): bool
+{
+    $projectId = $_POST[$key];
+    $project = getCurrentUserData($con, [$projectId, $currentUserId], getQueryIsProjExists());
+    if (empty($project)) {
+        return false;
+    }
+    return true;
+}
+
+/**
+ * Проверяет существует ли такой проект у текущего пользователя. Осуществляется по id проекта
+ * @param $con : Ресурс соединения с БД
+ * @param $projectId : id проекта
+ * @param $currentUserId : id текущего пользователя
+ * @return bool Если проект уже есть в базе - возвращает true, если такого проекта нет - возвращает false
+ */
+function isProjExistsByIdForFilter($con, $projectId, $currentUserId): bool
+{
+    $project = getCurrentUserData($con, [$projectId, $currentUserId], getQueryIsProjExists());
+    if (empty($project)) {
+        return false;
+    }
+    return true;
 }
 
 /**
  * Проверка поля с датой на соответствие формату ГГГГ-ММ-ДД
- * @param $name . Название ключа в $_POST массиве, по которому будем искать дату
- * @return string|null
- * Возвращает null если формат даты верный, либо если дата не была указана при создании задачи
- * Если формат неверный, возвращает сообщение об ошибке
+ * @param $key : Имя ключа в $_POST массиве, по которому получаем значение даты
+ * @return bool|null
+ * Если введенная дата не соответствует формату возвращает false.
+ * Если соответствует, возвращает true.
+ * Если дата не была передана возвращает null.
  */
-function validateDateFormat($name): string|null|bool
+function isDateFormatValid($key): bool|null
 {
     $format = 'Y-m-d';
-    $date = $_POST[$name];
+    $date = $_POST[$key];
 
     if ($date === '') {
         return null;
@@ -129,13 +125,16 @@ function validateDateFormat($name): string|null|bool
 
 /**
  * Проверка даты на соответствие условия. Дата должна быть >= текущей
- * @param $name . Название ключа в $_POST массиве, по которому будем искать дату
- * @return string|null Если дата не соответствует условию, выводит ошибку.
+ * @param $key : Имя ключа в $_POST массиве, по которому получаем значение даты
+ * @return bool|null
+ * Если выбранная дата меньше текущей , возвращает false.
+ * Если выбранная дата больше либо равна текущей (то есть проверка пройдена), возвращает true.
+ * Если дата не была передана, возвращает null.
  */
-function validateDateRange($name): null|string|bool
+function isDateRangeValid($key): bool|null
 {
     $format = 'Y-m-d';
-    $date = $_POST[$name];
+    $date = $_POST[$key];
 
     if ($date === '') {
         return null;

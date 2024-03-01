@@ -5,48 +5,45 @@ require_once '../functions/validators.php';
 require_once '../db/db.php';
 
 $titleName = 'Дела в порядке';
-$currentUser = "Илья";
+$currentUserId = '';
+$currentUserName = '';
+$currentUserEmail = '';
 
+if (!empty($_SESSION['user']['id'])) {
+    $currentUserId = $_SESSION['user']['id'];
+    $currentUser = getUserDataById($con, $currentUserId);
+    $currentUserEmail = $currentUser['email'];
+    $currentUserName = $currentUser['name'];
+}
+
+$currentUserProjects = '';
+$currentUserTasks = '';
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $required = ['email', 'password', 'name'];
+    $format = ['email'];
+    $exists = ['email'];
 
-    $rules = [
-        'email' => function ($value) use ($con) {
-            if (validateFilled($value)) {
-                return validateFilled($value);
-            }
-            if (validateEmailFormat($value)) {
-                return validateEmailFormat($value);
-            }
-            if (isEmailExists($con, $value)) {
-                return isEmailExists($con, $value);
-            }
-        },
-        'password' => function ($value) {
-            return validateFilled($value);
-        },
-        'name' => function ($value) {
-            return validateFilled($value);
-        },
-    ];
-
-    $newUser = filter_input_array(
-        INPUT_POST,
-        ['email' => FILTER_DEFAULT, 'password' => FILTER_DEFAULT, 'name' => FILTER_DEFAULT]);
+    $newUser = filter_input_array(INPUT_POST, [
+        'email' => FILTER_DEFAULT,
+        'password' => FILTER_DEFAULT,
+        'name' => FILTER_DEFAULT
+    ]);
 
     foreach ($newUser as $key => $value) {
-        if (isset($rules[$key])) {
-            $rule = $rules[$key];
-            $errors[$key] = $rule($key);
+        if (in_array($key, $required, true) && isFilled($key) === false) {
+            $errors[$key] = "Заполните поле $key";
         }
-        // TODO думаю можно сделать без этого куска кода. Подумать можно ли его запихнуть в функцию  validateFilled()
-        if (in_array($key, $required, true) && empty(trim($value))) {
-            $errors[$key] = "Поле $key должно быть заполнено";
+        if (in_array($key, $format, true) && empty($errors[$key]) && isEmailValid($key) === false) {
+            $errors[$key] = "Неверный формат почты";
+        }
+        if (in_array($key, $exists, true) && empty($errors[$key]) && isEmailExists($con, $key) === true) {
+            $errors[$key] = "Пользователь с такой почтой уже существует";
         }
     }
+
     $errors = array_filter($errors);
 
     if (empty($errors)) {
@@ -59,14 +56,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-
 $content = include_template('register.php', [
     'errors' => $errors,
 ]);
 
 $layout = include_template('layout.php', [
     'titleName' => $titleName,
-    'currentUser' => $currentUser,
     'content' => $content,
 ]);
 print($layout);

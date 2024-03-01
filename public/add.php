@@ -39,16 +39,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ]);
 
     foreach ($newTask as $key => $value) {
-        if (in_array($key, $required, true) && !validateFilled($key)) {
+        if (in_array($key, $required, true) && isFilled($key) === false) {
             $errors[$key] = "Заполните поле $key";
         }
-        if (in_array($key, $exists, true) && empty($errors[$key]) && !isProjExists($con, $key, $currentUserId)) {
+        if (in_array($key, $exists, true) && empty($errors[$key]) && isProjExistsById($con, $key, $currentUserId) === false) {
             $errors[$key] = "Такого проекта не существует";
         }
-        if (in_array($key, $format, true) && empty($errors[$key]) && validateDateFormat($key) === false) {
+        if (in_array($key, $format, true) && empty($errors[$key]) && isDateFormatValid($key) === false) {
             $errors[$key] = "Введенная дата не соответствует формату ГГГГ-ММ-ДД";
         }
-        if (in_array($key, $range, true) && empty($errors[$key]) && validateDateRange($key) === false) {
+        if (in_array($key, $range, true) && empty($errors[$key]) && isDateRangeValid($key) === false) {
             $errors[$key] = "Дата выполнения должна быть больше или равна текущей";
         }
     }

@@ -65,13 +65,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if (!isset($filter)) {
         if ($projectId) {
             $currentUserTasks = getCurrentUserData($con, $projectId, getQueryFilteredByProjTasks());
-            $projExists = isProjExists($con, $projectId, $currentUserId);
-            if (empty($currentUserTasks) && $projExists !== null) {
+            $projExists = isProjExistsByIdForFilter($con, $projectId, $currentUserId);
+            if (empty($currentUserTasks) && !$projExists) {
                 return http_response_code(404);
+                //TODO: вывести шаблон
             }
         }
         if ($projectId === '') {
             return http_response_code(404);
+            //TODO: вывести шаблон
         }
     }
 

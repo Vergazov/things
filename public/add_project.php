@@ -33,11 +33,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $newProject = filter_input_array(INPUT_POST, ['project_name' => FILTER_DEFAULT]);
 
     foreach ($newProject as $key => $value) {
-        if (in_array($key, $required, true) && !validateFilled($key)) {
+        if (in_array($key, $required, true) && isFilled($key) === false) {
             $errors[$key] = "Заполните поле $key";
         }
-
-        if (in_array($key, $exists, true) && empty($errors[$key]) && !isProjExistsByName($con, $key, $currentUserId)) {
+        if (in_array($key, $exists, true) && empty($errors[$key]) && isProjExistsByName($con, $key, $currentUserId) === true) {
             $errors[$key] = "Такой проект уже существует";
         }
     }

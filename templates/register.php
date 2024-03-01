@@ -41,7 +41,7 @@
                         <?php if(isset($errors['name'])): ?> form__input--error <?php endif; ?>" type="text" name="name" id="name" value="" placeholder="Введите имя">
                     </div>
 
-                    <div class="form__row form__row--controls">
+                    <div class="form__row">
                         <?php if(!empty($errors)): ?>
                             <p class="error-message">Пожалуйста, исправьте ошибки в форме</p>
                         <?php endif; ?>

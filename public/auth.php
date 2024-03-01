@@ -16,10 +16,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     foreach ($dataForAuth as $key => $value) {
 
-        if (in_array($key, $required, true) && !validateFilled($key)) {
+        if (in_array($key, $required, true) && isFilled($key) === false) {
             $errors[$key] = "Заполните поле $key";
         }
-        if (in_array($key, $exists, true) && empty($errors[$key]) && !isEmailExistsForAuth($con, $key)) {
+        if (in_array($key, $exists, true) && empty($errors[$key]) && isEmailExists($con, $key) === false) {
             $errors[$key] = "Вы ввели неверный $key";
         }
     }
