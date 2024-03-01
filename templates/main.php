@@ -66,10 +66,13 @@
                         <a class="download-link" href="<?=$task['file']?>"><?=getFileName($task['file'])?></a>
                     <?php endif; ?>
                 </td>
-                <td class="task__date"><?=htmlspecialchars($task['completion_date'])?></td>
+                <td class="task__date">
+                    <?php if($task['completion_date'] === null): ?>
+                    <?php else: ?> <?=htmlspecialchars($task['completion_date'])?>
+                    <?php endif?>
+                </td>
             </tr>
         <?php endforeach; ?>
-        <!--показывать следующий тег <tr/>, если переменная $show_complete_tasks равна единице-->
         <?php if($show_complete_tasks === 1): ?>
         <?php endif; ?>
     </table>

@@ -38,3 +38,20 @@
 [01-Mar-2024 16:57:04 Europe/Moscow] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\public\index.php on line 45
 [01-Mar-2024 16:57:04 Europe/Moscow] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\templates\main.php on line 69
 [01-Mar-2024 16:57:04 Europe/Moscow] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\templates\main.php on line 69
+[01-Mar-2024 16:18:56 Europe/Berlin] PHP Fatal error:  Uncaught Dotenv\Exception\InvalidPathException: Unable to read any of the environment file(s) at [c:\xampp\htdocs\things\.env]. in C:\xampp\htdocs\things\vendor\vlucas\phpdotenv\src\Store\FileStore.php:68
+Stack trace:
+#0 C:\xampp\htdocs\things\vendor\vlucas\phpdotenv\src\Dotenv.php(222): Dotenv\Store\FileStore->read()
+#1 C:\xampp\htdocs\things\db\db.php(5): Dotenv\Dotenv->load()
+#2 C:\xampp\htdocs\things\public\index.php(10): require_once('C:\\xampp\\htdocs...')
+#3 {main}
+  thrown in C:\xampp\htdocs\things\vendor\vlucas\phpdotenv\src\Store\FileStore.php on line 68
+[01-Mar-2024 16:42:48 Europe/Berlin] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\public\index.php on line 45
+[01-Mar-2024 17:02:04 Europe/Berlin] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\public\index.php on line 45
+[01-Mar-2024 17:02:05 Europe/Berlin] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\public\index.php on line 45
+[01-Mar-2024 17:25:47 Europe/Berlin] PHP Deprecated:  preg_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated in C:\xampp\htdocs\things\public\index.php on line 45
+[01-Mar-2024 17:26:47 Europe/Berlin] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\public\index.php on line 46
+[01-Mar-2024 17:26:55 Europe/Berlin] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\public\index.php on line 46
+[01-Mar-2024 17:27:21 Europe/Berlin] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\public\index.php on line 47
+[01-Mar-2024 17:27:26 Europe/Berlin] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\public\index.php on line 47
+[01-Mar-2024 17:32:30 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\templates\main.php on line 69
+[01-Mar-2024 17:33:09 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\templates\main.php on line 69

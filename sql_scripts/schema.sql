@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS tasks (
     status BOOLEAN DEFAULT 0,
     name VARCHAR(255) NOT NULL,
     file VARCHAR(150),
-    completion_date DATE NOT NULL,
+    completion_date DATE,
     user_id INT UNSIGNED NOT NULL,
     project_id INT UNSIGNED NOT NULL,
     PRIMARY KEY (id),
