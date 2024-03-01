@@ -1,0 +1,40 @@
+[01-Mar-2024 16:35:36 Europe/Moscow] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\public\index.php on line 45
+[01-Mar-2024 16:36:48 Europe/Moscow] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\public\index.php on line 45
+[01-Mar-2024 16:36:50 Europe/Moscow] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\public\index.php on line 45
+[01-Mar-2024 16:36:50 Europe/Moscow] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\public\index.php on line 45
+[01-Mar-2024 16:50:21 Europe/Moscow] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\templates\main.php on line 69
+[01-Mar-2024 16:50:21 Europe/Moscow] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\templates\main.php on line 69
+[01-Mar-2024 16:51:15 Europe/Moscow] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\templates\main.php on line 69
+[01-Mar-2024 16:51:15 Europe/Moscow] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\templates\main.php on line 69
+[01-Mar-2024 16:51:19 Europe/Moscow] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\templates\main.php on line 69
+[01-Mar-2024 16:51:19 Europe/Moscow] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\templates\main.php on line 69
+[01-Mar-2024 16:51:24 Europe/Moscow] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\templates\main.php on line 69
+[01-Mar-2024 16:51:24 Europe/Moscow] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\templates\main.php on line 69
+[01-Mar-2024 16:54:21 Europe/Moscow] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\public\index.php on line 45
+[01-Mar-2024 16:54:21 Europe/Moscow] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\templates\main.php on line 69
+[01-Mar-2024 16:54:21 Europe/Moscow] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\templates\main.php on line 69
+[01-Mar-2024 16:55:18 Europe/Moscow] PHP Warning:  Undefined variable $projectId in C:\xampp\htdocs\things\templates\add.php on line 8
+[01-Mar-2024 16:55:18 Europe/Moscow] PHP Warning:  Undefined variable $projectId in C:\xampp\htdocs\things\templates\add.php on line 8
+[01-Mar-2024 16:55:18 Europe/Moscow] PHP Warning:  Undefined variable $projectId in C:\xampp\htdocs\things\templates\add.php on line 8
+[01-Mar-2024 16:55:18 Europe/Moscow] PHP Warning:  Undefined variable $projectId in C:\xampp\htdocs\things\templates\add.php on line 8
+[01-Mar-2024 16:55:21 Europe/Moscow] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\public\index.php on line 45
+[01-Mar-2024 16:55:21 Europe/Moscow] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\templates\main.php on line 69
+[01-Mar-2024 16:55:21 Europe/Moscow] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\templates\main.php on line 69
+[01-Mar-2024 16:55:23 Europe/Moscow] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\public\index.php on line 45
+[01-Mar-2024 16:55:23 Europe/Moscow] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\templates\main.php on line 69
+[01-Mar-2024 16:55:23 Europe/Moscow] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\templates\main.php on line 69
+[01-Mar-2024 16:55:29 Europe/Moscow] PHP Warning:  Undefined variable $projectId in C:\xampp\htdocs\things\templates\add.php on line 8
+[01-Mar-2024 16:55:29 Europe/Moscow] PHP Warning:  Undefined variable $projectId in C:\xampp\htdocs\things\templates\add.php on line 8
+[01-Mar-2024 16:55:29 Europe/Moscow] PHP Warning:  Undefined variable $projectId in C:\xampp\htdocs\things\templates\add.php on line 8
+[01-Mar-2024 16:55:29 Europe/Moscow] PHP Warning:  Undefined variable $projectId in C:\xampp\htdocs\things\templates\add.php on line 8
+[01-Mar-2024 16:55:32 Europe/Moscow] PHP Warning:  Undefined variable $projectId in C:\xampp\htdocs\things\templates\add_project.php on line 8
+[01-Mar-2024 16:55:32 Europe/Moscow] PHP Warning:  Undefined variable $projectId in C:\xampp\htdocs\things\templates\add_project.php on line 8
+[01-Mar-2024 16:55:32 Europe/Moscow] PHP Warning:  Undefined variable $projectId in C:\xampp\htdocs\things\templates\add_project.php on line 8
+[01-Mar-2024 16:55:32 Europe/Moscow] PHP Warning:  Undefined variable $projectId in C:\xampp\htdocs\things\templates\add_project.php on line 8
+[01-Mar-2024 16:55:34 Europe/Moscow] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\public\index.php on line 45
+[01-Mar-2024 16:55:42 Europe/Moscow] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\public\index.php on line 45
+[01-Mar-2024 16:56:04 Europe/Moscow] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\public\index.php on line 45
+[01-Mar-2024 16:56:06 Europe/Moscow] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\public\index.php on line 45
+[01-Mar-2024 16:57:04 Europe/Moscow] PHP Deprecated:  trim(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\public\index.php on line 45
+[01-Mar-2024 16:57:04 Europe/Moscow] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\templates\main.php on line 69
+[01-Mar-2024 16:57:04 Europe/Moscow] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\things\templates\main.php on line 69

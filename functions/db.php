@@ -27,10 +27,14 @@ function db_get_prepare_stmt($link, $sql, $data = [])
 
             if (is_int($value)) {
                 $type = 'i';
-            } else if (is_string($value)) {
-                $type = 's';
-            } else if (is_float($value)) {
-                $type = 'd';
+            } else {
+                if (is_string($value)) {
+                    $type = 's';
+                } else {
+                    if (is_float($value)) {
+                        $type = 'd';
+                    }
+                }
             }
 
             if ($type) {
@@ -61,9 +65,9 @@ function db_get_prepare_stmt($link, $sql, $data = [])
  */
 function getCurrentUserData($con, $data, $sql): array|string
 {
-    if(is_array($data)){
+    if (is_array($data)) {
         $stmt = db_get_prepare_stmt($con, $sql, $data);
-    }else{
+    } else {
         $stmt = db_get_prepare_stmt($con, $sql, [$data]);
     }
     mysqli_stmt_execute($stmt);
@@ -282,4 +286,13 @@ function getUserDataById($con, $id): array|string
     $userData = getCurrentUserData($con, $id, getQueryUserById());
     return $userData[0];
 
+}
+
+/**
+ * Запрос на список невыполненных задач на сегодня у текущего пользователя
+ * @return string
+ */
+function getQueryGetNotReadyTasks(): string
+{
+    return 'SELECT * FROM things_are_fine.tasks WHERE status = 0 AND completion_date = CURDATE() AND user_id = ?';
 }
