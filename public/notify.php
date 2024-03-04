@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 require_once '../functions/db.php';
 require_once '../functions/template.php';
 require_once '../db/db.php';
@@ -10,46 +10,50 @@ use Symfony\Component\Mime\Email;
 
 require_once '../vendor/autoload.php';
 
-$currentUserName = '';
-$currentUserId = '';
-
-if (!empty($_SESSION['user']['id'])) {
-    $currentUserId = $_SESSION['user']['id'];
-    $currentUser = getUserDataById($con, $currentUserId);
-    $currentUserName = $currentUser['name'];
-}
 $dotenv = Dotenv\Dotenv::createImmutable('c:\xampp\htdocs\things');
 $dotenv->load();
 
-$mailTo = $_ENV['MAILTO'];
 $mailFrom = $_ENV['MAILFROM'];
 $mailFromPass = $_ENV['MAILFROMPASSWORD'];
-
 $dsn = "smtp://$mailFrom:$mailFromPass@smtp.yandex.ru:465?encryption=SSL";
 
-$notReadyTasks = getCurrentUserData($con, $currentUserId, getQueryGetNotReadyTasks());
-$notReadyTasksNames = [];
-foreach ($notReadyTasks as $task){
-    $notReadyTasksNames[] = $task['name'];
+$notReadyTasks = getCurrentUserData($con, 0, getQueryGetNotReadyTasks1());
+
+$tasksForUsers = [];
+foreach ($notReadyTasks as $task) {
+    $tasksForUsers[$task['user_id']][] = $task['name'];
 }
-$notReadyTasksNamesImploded = implode(', ',$notReadyTasksNames);
 
-$tasksAmount = count($notReadyTasks);
-
-$message = "Уважаемый, $currentUserName. На сегодня у вас " .
-    get_noun_plural_form($tasksAmount, 'запланирована', 'запланировано', 'запланировано') . ' ' .
-    $tasksAmount . ' ' . get_noun_plural_form($tasksAmount, 'задача', 'задачи', 'задач') . ': ' .
-    $notReadyTasksNamesImploded;
-
-$transport = Transport::fromDsn($dsn);
-$mailer = new Mailer($transport);
-$email = (new Email())
-    ->to("$mailTo")
-    ->from("$mailFrom")
-    ->subject("Уведомление от сервиса «Дела в порядке»")
-    ->text($message);
-$res = $mailer->send($email);
-
-if($res === null){
-    header("Location:" . getAbsolutePath('index.php'));
+$emails = [];
+foreach ($tasksForUsers as $key => $Value) {
+    $emails[$key] = getCurrentUserData($con, $key, getQueryGetEmailsForUsers());
 }
+
+$tasksForEmails = [];
+foreach ($emails as $key => $value) {
+    $tasksForEmails[$value[0]['email']]['countTasks'] = count($tasksForUsers[$key]);
+    $tasksForEmails[$value[0]['email']]['tasks'] = implode(', ', $tasksForUsers[$key]);
+    $tasksForEmails[$value[0]['email']]['userName'] = $value[0]['name'];
+}
+
+foreach ($tasksForEmails as $key => $value) {
+    $message = "Уважаемый, " . $value['userName'] . " На сегодня у вас " .
+        get_noun_plural_form($value['countTasks'], 'запланирована', 'запланировано', 'запланировано') . ' ' .
+        $value['countTasks'] . ' ' . get_noun_plural_form($value['countTasks'], 'задача', 'задачи', 'задач') . ': ' .
+        $value['tasks'];
+    $transport = Transport::fromDsn($dsn);
+    $mailer = new Mailer($transport);
+    $email = (new Email())
+        ->to("$key")
+        ->from("$mailFrom")
+        ->subject("Уведомление от сервиса «Дела в порядке»")
+        ->text($message);
+//    dd($message);
+    $res = $mailer->send($email);
+
+    if ($res === null) {
+        header("Location:" . getAbsolutePath('index.php'));
+    }
+}
+
+

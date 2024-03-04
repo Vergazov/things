@@ -52,7 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $errors = array_filter($errors);
-    $taskId = '';
     $file_path = '';
     $file_name = '';
     $fileUrl = '';

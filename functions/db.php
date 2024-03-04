@@ -296,3 +296,14 @@ function getQueryGetNotReadyTasks(): string
 {
     return 'SELECT * FROM things_are_fine.tasks WHERE status = 0 AND completion_date = CURDATE() AND user_id = ?';
 }
+
+
+function getQueryGetNotReadyTasks1(): string
+{
+    return 'SELECT * FROM things_are_fine.tasks WHERE status = ? AND completion_date = CURDATE()';
+}
+
+function getQueryGetEmailsForUsers(): string
+{
+    return 'SELECT name ,email FROM things_are_fine.users WHERE id = ?';
+}
