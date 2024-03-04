@@ -17,7 +17,7 @@ $mailFrom = $_ENV['MAILFROM'];
 $mailFromPass = $_ENV['MAILFROMPASSWORD'];
 $dsn = "smtp://$mailFrom:$mailFromPass@smtp.yandex.ru:465?encryption=SSL";
 
-$notReadyTasks = getCurrentUserData($con, 0, getQueryGetNotReadyTasks1());
+$notReadyTasks = getCurrentUserData($con, 0, getQueryGetNotReadyTasks());
 
 $tasksForUsers = [];
 foreach ($notReadyTasks as $task) {
