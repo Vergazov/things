@@ -289,20 +289,18 @@ function getUserDataById($con, $id): array|string
 }
 
 /**
- * Запрос на список невыполненных задач на сегодня у текущего пользователя
+ * Запрос на список невыполненных задач на сегодня у всех пользователей
  * @return string
  */
 function getQueryGetNotReadyTasks(): string
 {
-    return 'SELECT * FROM things_are_fine.tasks WHERE status = 0 AND completion_date = CURDATE() AND user_id = ?';
-}
-
-
-function getQueryGetNotReadyTasks1(): string
-{
     return 'SELECT * FROM things_are_fine.tasks WHERE status = ? AND completion_date = CURDATE()';
 }
 
+/**
+ * Запрос на получение имени и почты конкретного пользователя по id
+ * @return string
+ */
 function getQueryGetEmailsForUsers(): string
 {
     return 'SELECT name ,email FROM things_are_fine.users WHERE id = ?';
