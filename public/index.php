@@ -1,10 +1,6 @@
 <?php
-session_start();
 
-require_once '../functions/db.php';
-require_once '../functions/template.php';
-require_once '../functions/validators.php';
-require_once '../db/db.php';
+require_once '../bootstrap.php';
 
 $showCompleted = filter_input(INPUT_GET, 'show_completed');
 if ($showCompleted) {
@@ -13,7 +9,6 @@ if ($showCompleted) {
     $show_complete_tasks = 0;
 }
 
-$titleName = 'Дела в порядке';
 $currentUserId = '';
 $currentUserName = '';
 

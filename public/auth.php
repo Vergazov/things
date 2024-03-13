@@ -1,10 +1,6 @@
 <?php
-require_once '../functions/db.php';
-require_once '../functions/template.php';
-require_once '../functions/validators.php';
-require_once '../db/db.php';
 
-$titleName = 'Дела в порядке';
+require_once '../bootstrap.php';
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -28,7 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors)) {
         $userData = getUserDataByEmail($con, $dataForAuth['email']);
         if (password_verify($dataForAuth['password'], $userData['password'])) {
-            $session = session_start();
             $_SESSION['user']['id'] = $userData['id'];
             header("Location:" . getAbsolutePath('index.php'));
         } else {

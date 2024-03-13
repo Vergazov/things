@@ -1,20 +1,13 @@
 <?php
 
-require_once '../functions/db.php';
-require_once '../functions/template.php';
-require_once '../db/db.php';
+require_once '../bootstrap.php';
 
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mime\Email;
 
-require_once '../vendor/autoload.php';
-
-$dotenv = Dotenv\Dotenv::createImmutable('c:\xampp\htdocs\things');
-$dotenv->load();
-
-$mailFrom = $_ENV['MAILFROM'];
-$mailFromPass = $_ENV['MAILFROMPASSWORD'];
+$mailFrom = $config['mailer']['mail_from'];
+$mailFromPass = $config['mailer']['mail_from_password'];
 $dsn = "smtp://$mailFrom:$mailFromPass@smtp.yandex.ru:465?encryption=SSL";
 
 $notReadyTasks = getCurrentUserData($con, 0, getQueryGetNotReadyTasks());
@@ -48,7 +41,6 @@ foreach ($tasksForEmails as $key => $value) {
         ->from("$mailFrom")
         ->subject("Уведомление от сервиса «Дела в порядке»")
         ->text($message);
-//    dd($message);
     $res = $mailer->send($email);
 
     if ($res === null) {

@@ -79,6 +79,28 @@ function getCurrentUserData($con, $data, $sql): array|string
     return mysqli_error($con);
 }
 
+/**
+ * @param $config : Переменная, содержащая конфигурацию приложения
+ * @return bool|string|mysqli|null
+ * Если соединение успешно возвращает ресурс соединения с БД, иначе - сообщение об ошибке.
+ */
+function dbConnection($config): bool|string|mysqli|null
+{
+    try {
+        $con = mysqli_connect(
+            $config['db']['host'],
+            $config['db']['user'],
+            $config['db']['password'],
+            $config['db']['database']
+        );
+
+        mysqli_set_charset($con, 'utf8');
+        return $con;
+    } catch (Exception $e) {
+        return 'Ошибка при подключении к БД:' . $e->getMessage();
+    }
+}
+
 
 /**
  * @return string . Запрос для получения списка проектов у текущего пользователя

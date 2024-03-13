@@ -1,5 +1,5 @@
 <?php
-session_start();
-require_once '../functions/template.php';
+require_once '../bootstrap.php';
 $_SESSION = [];
-header("Location:" . getAbsolutePath('index.php'));
+header("Location:index.php");
+

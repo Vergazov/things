@@ -1,14 +1,9 @@
 <?php
-session_start();
 
-require_once '../functions/db.php';
-require_once '../functions/template.php';
-require_once '../functions/validators.php';
-require_once '../db/db.php';
+require_once '../bootstrap.php';
 
-$titleName = 'Дела в порядке';
-$currentUserName = '';
 $currentUserId = '';
+$currentUserName = '';
 
 if (!empty($_SESSION['user']['id'])) {
     $currentUserId = $_SESSION['user']['id'];
