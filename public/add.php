@@ -1,5 +1,4 @@
 <?php
-
 require_once '../bootstrap.php';
 
 if (!empty($_SESSION['user']['id'])) {
