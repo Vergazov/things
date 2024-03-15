@@ -2,20 +2,12 @@
 
 require_once '../bootstrap.php';
 
-$currentUserId = '';
-$currentUserName = '';
-$currentUserEmail = '';
-
 if (!empty($_SESSION['user']['id'])) {
     $currentUserId = $_SESSION['user']['id'];
     $currentUser = getUserDataById($con, $currentUserId);
     $currentUserEmail = $currentUser['email'];
     $currentUserName = $currentUser['name'];
 }
-
-$currentUserProjects = '';
-$currentUserTasks = '';
-$errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 

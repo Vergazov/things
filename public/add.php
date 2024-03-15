@@ -2,18 +2,11 @@
 
 require_once '../bootstrap.php';
 
-$currentUserId = '';
-$currentUserName = '';
-
 if (!empty($_SESSION['user']['id'])) {
     $currentUserId = $_SESSION['user']['id'];
     $currentUser = getUserDataById($con, $currentUserId);
     $currentUserName = $currentUser['name'];
 }
-
-$currentUserProjects = '';
-$currentUserTasks = '';
-$errors = [];
 
 $currentUserProjects = getCurrentUserData($con, $currentUserId, getQueryCurrentUserProjects());
 $currentUserTasks = getCurrentUserData($con, $currentUserId, getQueryCurrentUserTasks());

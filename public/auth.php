@@ -1,7 +1,10 @@
 <?php
 
 require_once '../bootstrap.php';
-$errors = [];
+
+if(!empty($_SESSION)){
+    $_SESSION = [];
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 

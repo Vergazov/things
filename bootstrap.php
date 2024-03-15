@@ -11,3 +11,9 @@ $config = require('config.php');
 $con = dbConnection($config);
 
 $titleName = 'Дела в порядке';
+$currentUserId = '';
+$currentUserName = '';
+$currentUserEmail = '';
+$currentUserProjects = '';
+$currentUserTasks = '';
+$errors = [];

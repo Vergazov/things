@@ -9,8 +9,7 @@ if ($showCompleted) {
     $show_complete_tasks = 0;
 }
 
-$currentUserId = '';
-$currentUserName = '';
+$currentUser = '';
 
 if (!empty($_SESSION['user']['id'])) {
     $currentUserId = $_SESSION['user']['id'];
@@ -18,8 +17,6 @@ if (!empty($_SESSION['user']['id'])) {
     $currentUserName = $currentUser['name'];
 }
 
-$currentUserProjects = '';
-$currentUserTasks = '';
 $currentUserAllTasks = '';
 $projectId = '';
 $taskStatus = 0;
