@@ -3,6 +3,7 @@
 require_once '../bootstrap.php';
 
 $showCompleted = filter_input(INPUT_GET, 'show_completed');
+
 if ($showCompleted) {
     $show_complete_tasks = 1;
 } else {

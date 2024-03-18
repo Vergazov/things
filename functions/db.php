@@ -3,13 +3,13 @@
 /**
  * Создает подготовленное выражение на основе готового SQL запроса и переданных данных
  *
- * @param $link mysqli Ресурс соединения
- * @param $sql string SQL запрос с плейсхолдерами вместо значений
+ * @param mysqli $link Ресурс соединения
+ * @param string $sql SQL запрос с плейсхолдерами вместо значений
  * @param array $data Данные для вставки на место плейсхолдеров
  *
  * @return mysqli_stmt Подготовленное выражение
  */
-function db_get_prepare_stmt($link, $sql, $data = [])
+function db_get_prepare_stmt(mysqli $link, string $sql, array $data = []): mysqli_stmt
 {
     $stmt = mysqli_prepare($link, $sql);
 
@@ -58,12 +58,12 @@ function db_get_prepare_stmt($link, $sql, $data = [])
 
 /**
  * Выполняет подготовленное выражение.
- * @param $con . Ресурс соединения
- * @param $data . Данные для вставки в запрос
- * @param $sql . SQL запрос
+ * @param mysqli $con Ресурс соединения
+ * @param array|string $data Данные для вставки в запрос
+ * @param string $sql SQL запрос
  * @return array|string
  */
-function getCurrentUserData($con, $data, $sql): array|string
+function getCurrentUserData(mysqli $con, array|string $data, string $sql): array|string
 {
     if (is_array($data)) {
         $stmt = db_get_prepare_stmt($con, $sql, $data);
@@ -80,11 +80,11 @@ function getCurrentUserData($con, $data, $sql): array|string
 }
 
 /**
- * @param $config : Переменная, содержащая конфигурацию приложения
+ * @param array $config : Переменная, содержащая конфигурацию приложения
  * @return bool|string|mysqli|null
  * Если соединение успешно возвращает ресурс соединения с БД, иначе - сообщение об ошибке.
  */
-function dbConnection($config): bool|string|mysqli|null
+function dbConnection(array $config): bool|string|mysqli|null
 {
     try {
         $con = mysqli_connect(
@@ -103,7 +103,7 @@ function dbConnection($config): bool|string|mysqli|null
 
 
 /**
- * @return string . Запрос для получения списка проектов у текущего пользователя
+ * @return string Запрос для получения списка проектов у текущего пользователя
  */
 function getQueryCurrentUserProjects(): string
 {
@@ -114,7 +114,7 @@ function getQueryCurrentUserProjects(): string
 }
 
 /**
- * @return string . Запрос для получения списка задач у текущего пользователя
+ * @return string Запрос для получения списка задач у текущего пользователя
  */
 function getQueryCurrentUserTasks(): string
 {
@@ -128,7 +128,7 @@ function getQueryCurrentUserTasks(): string
 }
 
 /**
- * @return string . Запрос для получения списка задач, отфильтрованных по проекту
+ * @return string Запрос для получения списка задач, отфильтрованных по проекту
  */
 function getQueryFilteredByProjTasks(): string
 {
@@ -140,7 +140,7 @@ function getQueryFilteredByProjTasks(): string
 }
 
 /**
- * @return string . Запрос для добавления новой задачи
+ * @return string Запрос для добавления новой задачи
  */
 function getQueryAddTask(): string
 {
@@ -149,7 +149,7 @@ function getQueryAddTask(): string
 }
 
 /**
- * @return string . Запрос для добавления нового проекта
+ * @return string Запрос для добавления нового проекта
  */
 function getQueryAddProject(): string
 {
@@ -158,7 +158,7 @@ function getQueryAddProject(): string
 }
 
 /**
- * @return string . Запрос для добавления нового пользователя
+ * @return string Запрос для добавления нового пользователя
  */
 function getQueryAddUser(): string
 {
@@ -167,7 +167,7 @@ function getQueryAddUser(): string
 }
 
 /**
- * @return string . Запрос для проверки существования проекта по его id
+ * @return string Запрос для проверки существования проекта по его id
  */
 function getQueryIsProjExists(): string
 {
@@ -175,7 +175,7 @@ function getQueryIsProjExists(): string
 }
 
 /**
- * @return string . Запрос для проверки существования проекта по его id
+ * @return string Запрос для проверки существования проекта по его id
  */
 function getQueryIsProjExistsByName(): string
 {
@@ -183,7 +183,7 @@ function getQueryIsProjExistsByName(): string
 }
 
 /**
- * @return string . Запрос для проверки существования почты в базе
+ * @return string Запрос для проверки существования почты в базе
  */
 function getQueryIsEmailExists(): string
 {
@@ -191,7 +191,7 @@ function getQueryIsEmailExists(): string
 }
 
 /**
- * @return string . Запрос всей информации о пользователе из базы по email
+ * @return string Запрос всей информации о пользователе из базы по email
  */
 function getQueryUserByEmail(): string
 {
@@ -199,7 +199,7 @@ function getQueryUserByEmail(): string
 }
 
 /**
- * @return string . Запрос всей информации о пользователе из базы по id
+ * @return string Запрос всей информации о пользователе из базы по id
  */
 function getQueryUserById(): string
 {
@@ -207,7 +207,7 @@ function getQueryUserById(): string
 }
 
 /**
- * @return string . возвращает запрос для FULLTEXT поиска по задачам у текущего пользователя
+ * @return string Возвращает запрос для FULLTEXT поиска по задачам у текущего пользователя
  */
 function getQueryFtSearchCurrentUserTasks(): string
 {
@@ -215,7 +215,7 @@ function getQueryFtSearchCurrentUserTasks(): string
 }
 
 /**
- * @return string . запрос на смену статуса задачи
+ * @return string Запрос на смену статуса задачи
  */
 function getQueryInvertTaskStatus(): string
 {
@@ -223,7 +223,7 @@ function getQueryInvertTaskStatus(): string
 }
 
 /**
- * @return string . возвращает запрос для поиска задачи по id у текущего пользователя
+ * @return string Возвращает запрос для поиска задачи по id у текущего пользователя
  */
 function getQuerySearchTaskById(): string
 {
@@ -231,7 +231,7 @@ function getQuerySearchTaskById(): string
 }
 
 /**
- * @return string . возвращает запрос для поиска задач всех задач у текущего пользователя отфильтрованный по проектам
+ * @return string Возвращает запрос для поиска задач всех задач у текущего пользователя отфильтрованный по проектам
  */
 function getQuerySearchAllTasksByProject(): string
 {
@@ -239,7 +239,7 @@ function getQuerySearchAllTasksByProject(): string
 }
 
 /**
- * @return string . возвращает запрос для поиска задач на сегодня у текущего пользователя
+ * @return string Возвращает запрос для поиска задач на сегодня у текущего пользователя
  */
 function getQuerySearchTodayTasks(): string
 {
@@ -247,7 +247,7 @@ function getQuerySearchTodayTasks(): string
 }
 
 /**
- * @return string . возвращает запрос для поиска задач на сегодня у текущего пользователя отфильтрованный по проектам
+ * @return string Возвращает запрос для поиска задач на сегодня у текущего пользователя отфильтрованный по проектам
  */
 function getQuerySearchTodayTasksByProject(): string
 {
@@ -255,7 +255,7 @@ function getQuerySearchTodayTasksByProject(): string
 }
 
 /**
- * @return string . возвращает запрос для поиска задач на завтра у текущего пользователя
+ * @return string Возвращает запрос для поиска задач на завтра у текущего пользователя
  */
 function getQuerySearchTomorrowTasks(): string
 {
@@ -263,7 +263,7 @@ function getQuerySearchTomorrowTasks(): string
 }
 
 /**
- * @return string . возвращает запрос для поиска задач на завтра у текущего пользователя отфильтрованный по проектам
+ * @return string Возвращает запрос для поиска задач на завтра у текущего пользователя отфильтрованный по проектам
  */
 function getQuerySearchTomorrowTasksByProject(): string
 {
@@ -271,7 +271,7 @@ function getQuerySearchTomorrowTasksByProject(): string
 }
 
 /**
- * @return string . возвращает запрос для поиска просроченных задач у текущего пользователя
+ * @return string Возвращает запрос для поиска просроченных задач у текущего пользователя
  */
 function getQuerySearchOverdueTasks(): string
 {
@@ -279,31 +279,30 @@ function getQuerySearchOverdueTasks(): string
 }
 
 /**
- * @return string . возвращает запрос для поиска просроченных задач у текущего пользователя отфильтрованный по проектам
+ * @return string Возвращает запрос для поиска просроченных задач у текущего пользователя отфильтрованный по проектам
  */
 function getQuerySearchOverdueTasksByProject(): string
 {
     return 'SELECT * FROM things_are_fine.tasks WHERE completion_date < CURDATE() AND user_id = ? AND project_id = ?';
 }
 
-/** Возвращает всю информацию об одном пользователе
- * @param $con . Ресурс подключения
- * @param $email . Email по которому ищем пользователя
- * @return array|string
+/** Возвращает всю информацию об одном пользователе по Email
+ * @param mysqli $con Ресурс подключения
+ * @param string $email Email по которому ищем пользователя
+ * @return array
  */
-function getUserDataByEmail($con, $email): array|string
+function getUserDataByEmail(mysqli $con, string $email): array
 {
     $userData = getCurrentUserData($con, $email, getQueryUserByEmail());
     return $userData[0];
-
 }
 
-/** Возвращает всю информацию об одном пользователе
- * @param $con . Ресурс подключения
- * @param $id . id по которому ищем пользователя
- * @return array|string
+/** Возвращает всю информацию об одном пользователе по Id
+ * @param mysqli $con Ресурс подключения
+ * @param string $id id по которому ищем пользователя
+ * @return array
  */
-function getUserDataById($con, $id): array|string
+function getUserDataById(mysqli $con, string $id): array
 {
     $userData = getCurrentUserData($con, $id, getQueryUserById());
     return $userData[0];

@@ -6,7 +6,7 @@
  * @param array $data Ассоциативный массив с данными для шаблона
  * @return string Итоговый HTML
  */
-function include_template(string $name, array $data = [])
+function include_template(string $name, array $data = []): string
 {
     $name = '../templates/' . $name;
     $result = '';
@@ -71,11 +71,11 @@ function get_noun_plural_form (int $number, string $one, string $two, string $ma
 }
 
 /** Считает сколько задач подходит под категорию проекта
- * @param $tasks . Список задач
- * @param $project . Проект
+ * @param array $tasks Список задач
+ * @param string $project . Проект
  * @return int Количество задач подходящих под переданный проект
  */
-function countTasksForProject($tasks, $project): int
+function countTasksForProject(array $tasks, string $project): int
 {
     $tasksNumber = 0;
     foreach ($tasks as $task) {
@@ -89,12 +89,12 @@ function countTasksForProject($tasks, $project): int
 /**
  * Определяет является ли задача срочной.
  * Задача считается срочной если до даты выполнения остается 24 часа или меньше.
- * @param $date : дата выполнения задачи
+ * @param string|null $date Дата выполнения задачи
  * @return bool Если задача срочная, возвращает true,
  * Если не срочная то возвращает false,
  * Если дата выполнения не была передана, то возвращает false
  */
-function isTaskImportant($date): bool
+function isTaskImportant(string|null $date): bool
 {
     if($date === null){
         return false;
@@ -106,21 +106,21 @@ function isTaskImportant($date): bool
 
 /**
  * Функция для сохранения данных формы, в случае неудачной отправки запроса
- * @param $name . Ключ по которому в $_POST массиве будем искать данные из формы
+ * @param string $name Ключ по которому в $_POST массиве будем искать данные из формы
  * @return mixed Данные из $_POST массива по переданному ключу
  */
 
-function getPostVal($name)
+function getPostVal(string $name): mixed
 {
     return $_POST[$name] ?? "";
 }
 
 /**
  * Формирует абсолютный путь к файлу переданному функции
- * @param $file
+ * @param string $file Название запрашиваемой страницы
  * @return string
  */
-function getAbsolutePath($file): string
+function getAbsolutePath(string $file): string
 {
     $host = $_SERVER['HTTP_HOST'];
     $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
@@ -139,7 +139,12 @@ function dd($data)
     echo '</pre>';
 }
 
-function getFileName($fileUrl): string
+/**
+ * Формирует название прикрепленного файла.
+ * @param string $fileUrl
+ * @return string Возвращает название файла
+ */
+function getFileName(string $fileUrl): string
 {
     $fileName = explode('/',$fileUrl);
     return $fileName[1];

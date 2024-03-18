@@ -2,10 +2,10 @@
 
 /**
  * Проверяет чтобы поля были заполнены. Удаляет пробелы из начала и конца строки
- * @param $key : Имя ключа в $_POST массиве, по которому получаем значение проверяемого поля
+ * @param string $key Имя ключа в $_POST массиве, по которому получаем значение проверяемого поля
  * @return bool Если поле не заполнено возвращает false, если заполнено возвращает true
  */
-function isFilled($key):bool
+function isFilled(string $key):bool
 {
     $fieldForCheck = $_POST[$key];
     $fieldForCheck = trim($fieldForCheck);
@@ -19,11 +19,11 @@ function isFilled($key):bool
 
 /**
  * Проверяет почту в базе на дубликат
- * @param $con : Ресурс соединения
- * @param $name : Имя ключа в $_POST массиве, по которому получаем название почты
+ * @param mysqli $con Ресурс соединения
+ * @param string $name Имя ключа в $_POST массиве, по которому получаем название почты
  * @return bool Если введенная пользователем почта уже существует в базе - возвращает true, если такой почты нет - возвращает false
  */
-function isEmailExists($con, $name): bool
+function isEmailExists(mysqli $con, string $name): bool
 {
     $emailFromForm = $_POST[$name];
     $emailFromBase = getCurrentUserData($con, $emailFromForm, getQueryIsEmailExists());
@@ -35,10 +35,10 @@ function isEmailExists($con, $name): bool
 
 /**
  * Проверяет email на соответствие формату
- * @param $key : Имя ключа в $_POST массиве, по которому получаем название почты
- * @return bool : Если введенная почта некорректна - возвращает false, если корректна - возвращает true
+ * @param string $key Имя ключа в $_POST массиве, по которому получаем название почты
+ * @return bool Если введенная почта некорректна - возвращает false, если корректна - возвращает true
  */
-function isEmailValid($key): bool
+function isEmailValid(string $key): bool
 {
     $email = $_POST[$key];
     $validate = filter_var($email, FILTER_VALIDATE_EMAIL);
@@ -50,12 +50,12 @@ function isEmailValid($key): bool
 
 /**
  * Проверяет существует ли такой проект у текущего пользователя. Осуществляется по имени проекта
- * @param $con : Ресурс соединения с БД
- * @param $key : Имя ключа в $_POST массиве, по которому получаем значение названия проекта
- * @param $currentUserId : id текущего пользователя
+ * @param mysqli $con Ресурс соединения с БД
+ * @param string $key Имя ключа в $_POST массиве, по которому получаем значение названия проекта
+ * @param string $currentUserId id текущего пользователя
  * @return bool Если введенный пользователем проект уже есть в базе - возвращает true, если такого проекта нет - возвращает false
  */
-function isProjExistsByName($con, $key, $currentUserId): bool
+function isProjExistsByName(mysqli $con, string $key, string $currentUserId): bool
 {
     $projectName = $_POST[$key];
     $project = getCurrentUserData($con, [$projectName, $currentUserId], getQueryIsProjExistsByName());
@@ -67,12 +67,12 @@ function isProjExistsByName($con, $key, $currentUserId): bool
 
 /**
  * Проверяет существует ли такой проект у текущего пользователя. Осуществляется по id проекта
- * @param $con : Ресурс соединения с БД
- * @param $key : Имя ключа в $_POST массиве, по которому получаем значение id проекта.
- * @param $currentUserId : id текущего пользователя
+ * @param mysqli $con Ресурс соединения с БД
+ * @param string $key Имя ключа в $_POST массиве, по которому получаем значение id проекта.
+ * @param string $currentUserId id текущего пользователя
  * @return bool Если введенный пользователем проект уже есть в базе - возвращает true, если такого проекта нет - возвращает false
  */
-function isProjExistsById($con, $key, $currentUserId): bool
+function isProjExistsById(mysqli $con, string $key, string $currentUserId): bool
 {
     $projectId = $_POST[$key];
     $project = getCurrentUserData($con, [$projectId, $currentUserId], getQueryIsProjExists());
@@ -84,12 +84,12 @@ function isProjExistsById($con, $key, $currentUserId): bool
 
 /**
  * Проверяет существует ли такой проект у текущего пользователя. Осуществляется по id проекта
- * @param $con : Ресурс соединения с БД
- * @param $projectId : id проекта
- * @param $currentUserId : id текущего пользователя
+ * @param mysqli $con Ресурс соединения с БД
+ * @param string $projectId id проекта
+ * @param string $currentUserId id текущего пользователя
  * @return bool Если проект уже есть в базе - возвращает true, если такого проекта нет - возвращает false
  */
-function isProjExistsByIdForFilter($con, $projectId, $currentUserId): bool
+function isProjExistsByIdForFilter(mysqli $con, string $projectId, string $currentUserId): bool
 {
     $project = getCurrentUserData($con, [$projectId, $currentUserId], getQueryIsProjExists());
     if (empty($project)) {
@@ -100,13 +100,13 @@ function isProjExistsByIdForFilter($con, $projectId, $currentUserId): bool
 
 /**
  * Проверка поля с датой на соответствие формату ГГГГ-ММ-ДД
- * @param $key : Имя ключа в $_POST массиве, по которому получаем значение даты
+ * @param string $key Имя ключа в $_POST массиве, по которому получаем значение даты
  * @return bool|null
  * Если введенная дата не соответствует формату возвращает false.
  * Если соответствует, возвращает true.
  * Если дата не была передана возвращает null.
  */
-function isDateFormatValid($key): bool|null
+function isDateFormatValid(string $key): bool|null
 {
     $format = 'Y-m-d';
     $date = $_POST[$key];
@@ -125,13 +125,13 @@ function isDateFormatValid($key): bool|null
 
 /**
  * Проверка даты на соответствие условия. Дата должна быть >= текущей
- * @param $key : Имя ключа в $_POST массиве, по которому получаем значение даты
+ * @param string $key : Имя ключа в $_POST массиве, по которому получаем значение даты
  * @return bool|null
  * Если выбранная дата меньше текущей , возвращает false.
  * Если выбранная дата больше либо равна текущей (то есть проверка пройдена), возвращает true.
  * Если дата не была передана, возвращает null.
  */
-function isDateRangeValid($key): bool|null
+function isDateRangeValid(string $key): bool|null
 {
     $format = 'Y-m-d';
     $date = $_POST[$key];
