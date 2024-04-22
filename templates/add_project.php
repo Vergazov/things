@@ -1,3 +1,9 @@
+<?php
+/** @var array $currentUserProjects */
+/** @var array $tasksForCount */
+/** @var int $projectId */
+?>
+
 <div class="content">
     <section class="content__side">
         <h2 class="content__side-heading">Проекты</h2>
@@ -31,7 +37,7 @@
 
                 <input class="form__input
                         <?php if (isset($errors['project_name'])): ?> form__input--error <?php endif; ?>"
-                       type="text" name="project_name" id="project_name" value="<?=getPostVal('project_name')?>"
+                       type="text" name="project_name" id="project_name" value="<?= getPostVal('project_name') ?>"
                        placeholder="Введите название проекта">
             </div>
 

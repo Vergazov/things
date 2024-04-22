@@ -1,0 +1,28 @@
+[18-Mar-2024 10:41:50 Europe/Moscow] PHP Fatal error:  Uncaught TypeError: isTaskImportant(): Argument #1 ($date) must be of type string, null given, called in C:\xampp\htdocs\things\templates\main.php on line 56 and defined in C:\xampp\htdocs\things\functions\template.php:97
+Stack trace:
+#0 C:\xampp\htdocs\things\templates\main.php(56): isTaskImportant(NULL)
+#1 C:\xampp\htdocs\things\functions\template.php(20): require('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\things\public\index.php(116): include_template('../templates/ma...', Array)
+#3 {main}
+  thrown in C:\xampp\htdocs\things\functions\template.php on line 97
+[18-Mar-2024 10:41:53 Europe/Moscow] PHP Fatal error:  Uncaught TypeError: isTaskImportant(): Argument #1 ($date) must be of type string, null given, called in C:\xampp\htdocs\things\templates\main.php on line 56 and defined in C:\xampp\htdocs\things\functions\template.php:97
+Stack trace:
+#0 C:\xampp\htdocs\things\templates\main.php(56): isTaskImportant(NULL)
+#1 C:\xampp\htdocs\things\functions\template.php(20): require('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\things\public\index.php(116): include_template('../templates/ma...', Array)
+#3 {main}
+  thrown in C:\xampp\htdocs\things\functions\template.php on line 97
+[18-Mar-2024 10:41:54 Europe/Moscow] PHP Fatal error:  Uncaught TypeError: isTaskImportant(): Argument #1 ($date) must be of type string, null given, called in C:\xampp\htdocs\things\templates\main.php on line 56 and defined in C:\xampp\htdocs\things\functions\template.php:97
+Stack trace:
+#0 C:\xampp\htdocs\things\templates\main.php(56): isTaskImportant(NULL)
+#1 C:\xampp\htdocs\things\functions\template.php(20): require('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\things\public\index.php(116): include_template('../templates/ma...', Array)
+#3 {main}
+  thrown in C:\xampp\htdocs\things\functions\template.php on line 97
+[18-Mar-2024 10:41:54 Europe/Moscow] PHP Fatal error:  Uncaught TypeError: isTaskImportant(): Argument #1 ($date) must be of type string, null given, called in C:\xampp\htdocs\things\templates\main.php on line 56 and defined in C:\xampp\htdocs\things\functions\template.php:97
+Stack trace:
+#0 C:\xampp\htdocs\things\templates\main.php(56): isTaskImportant(NULL)
+#1 C:\xampp\htdocs\things\functions\template.php(20): require('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\things\public\index.php(116): include_template('../templates/ma...', Array)
+#3 {main}
+  thrown in C:\xampp\htdocs\things\functions\template.php on line 97

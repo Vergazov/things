@@ -1,3 +1,10 @@
+<?php
+/** @var array $currentUserProjects */
+/** @var array $tasksForCount */
+/** @var int $projectId */
+/** @var int $show_complete_tasks */
+?>
+
 <section class="content__side">
     <h2 class="content__side-heading">Проекты</h2>
     <nav class="main-navigation">

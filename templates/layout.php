@@ -1,3 +1,6 @@
+<?php
+/** @var string $titleName */
+?>
 <!DOCTYPE html>
 <html lang="ru">
 

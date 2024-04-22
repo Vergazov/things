@@ -107,8 +107,8 @@ function dbConnection(array $config): bool|string|mysqli|null
  */
 function getQueryCurrentUserProjects(): string
 {
-    return 'SELECT projects.id, projects.name from things_are_fine.projects '
-        . 'JOIN things_are_fine.users '
+    return 'SELECT projects.id, projects.name from projects '
+        . 'JOIN users '
         . 'ON projects.user_id = users.id '
         . 'WHERE users.id = ?';
 }
@@ -118,10 +118,10 @@ function getQueryCurrentUserProjects(): string
  */
 function getQueryCurrentUserTasks(): string
 {
-    return 'SELECT tasks.id, tasks.name, tasks.completion_date,tasks.file, projects.name project, tasks.status FROM things_are_fine.tasks '
-        . 'JOIN things_are_fine.users '
+    return 'SELECT tasks.id, tasks.name, tasks.completion_date,tasks.file, projects.name project, tasks.status FROM tasks '
+        . 'JOIN users '
         . 'ON  tasks.user_id = users.id '
-        . 'JOIN things_are_fine.projects '
+        . 'JOIN projects '
         . 'ON tasks.project_id = projects.id '
         . 'WHERE users.id = ? '
         . 'ORDER BY tasks.creation_date DESC';
@@ -132,8 +132,8 @@ function getQueryCurrentUserTasks(): string
  */
 function getQueryFilteredByProjTasks(): string
 {
-    return 'SELECT tasks.id, tasks.name, tasks.completion_date, projects.name project, tasks.status FROM things_are_fine.tasks '
-        . 'JOIN things_are_fine.projects '
+    return 'SELECT tasks.id, tasks.name, tasks.completion_date, projects.name project, tasks.status FROM tasks '
+        . 'JOIN projects '
         . 'ON tasks.project_id = projects.id '
         . 'WHERE project_id = ? '
         . 'ORDER BY tasks.creation_date DESC';
@@ -144,7 +144,7 @@ function getQueryFilteredByProjTasks(): string
  */
 function getQueryAddTask(): string
 {
-    return 'INSERT INTO things_are_fine.tasks(creation_date,name,file,completion_date,user_id,project_id) '
+    return 'INSERT INTO tasks(creation_date,name,file,completion_date,user_id,project_id) '
         . 'VALUES (NOW(),?,?,?,?,?)';
 }
 
@@ -153,7 +153,7 @@ function getQueryAddTask(): string
  */
 function getQueryAddProject(): string
 {
-    return 'INSERT INTO things_are_fine.projects(name,user_id) '
+    return 'INSERT INTO projects(name,user_id) '
         . 'VALUES (?,?)';
 }
 
@@ -162,7 +162,7 @@ function getQueryAddProject(): string
  */
 function getQueryAddUser(): string
 {
-    return 'INSERT INTO things_are_fine.users(reg_date, email, name, password) '
+    return 'INSERT INTO users(reg_date, email, name, password) '
         . 'VALUES (NOW(),?,?,?)';
 }
 
@@ -171,7 +171,7 @@ function getQueryAddUser(): string
  */
 function getQueryIsProjExists(): string
 {
-    return 'SELECT projects.name FROM things_are_fine.projects WHERE id = ? AND user_id = ?';
+    return 'SELECT projects.name FROM projects WHERE id = ? AND user_id = ?';
 }
 
 /**
@@ -179,7 +179,7 @@ function getQueryIsProjExists(): string
  */
 function getQueryIsProjExistsByName(): string
 {
-    return 'SELECT projects.name FROM things_are_fine.projects WHERE name = ? AND user_id = ?';
+    return 'SELECT projects.name FROM projects WHERE name = ? AND user_id = ?';
 }
 
 /**
@@ -187,7 +187,7 @@ function getQueryIsProjExistsByName(): string
  */
 function getQueryIsEmailExists(): string
 {
-    return 'SELECT users.email FROM things_are_fine.users WHERE email = ?';
+    return 'SELECT users.email FROM users WHERE email = ?';
 }
 
 /**
@@ -195,7 +195,7 @@ function getQueryIsEmailExists(): string
  */
 function getQueryUserByEmail(): string
 {
-    return 'SELECT * FROM things_are_fine.users WHERE email = ?';
+    return 'SELECT * FROM users WHERE email = ?';
 }
 
 /**
@@ -203,7 +203,7 @@ function getQueryUserByEmail(): string
  */
 function getQueryUserById(): string
 {
-    return 'SELECT * FROM things_are_fine.users WHERE id = ?';
+    return 'SELECT * FROM users WHERE id = ?';
 }
 
 /**
@@ -211,7 +211,7 @@ function getQueryUserById(): string
  */
 function getQueryFtSearchCurrentUserTasks(): string
 {
-    return 'SELECT * FROM things_are_fine.tasks WHERE MATCH (name) AGAINST (?) AND user_id = ?';
+    return 'SELECT * FROM tasks WHERE MATCH (name) AGAINST (?) AND user_id = ?';
 }
 
 /**
@@ -219,7 +219,7 @@ function getQueryFtSearchCurrentUserTasks(): string
  */
 function getQueryInvertTaskStatus(): string
 {
-    return 'UPDATE things_are_fine.tasks SET status = ? WHERE tasks.id = ?';
+    return 'UPDATE tasks SET status = ? WHERE tasks.id = ?';
 }
 
 /**
@@ -227,7 +227,7 @@ function getQueryInvertTaskStatus(): string
  */
 function getQuerySearchTaskById(): string
 {
-    return 'SELECT * FROM things_are_fine.tasks WHERE id = ? AND user_id = ?';
+    return 'SELECT * FROM tasks WHERE id = ? AND user_id = ?';
 }
 
 /**
@@ -235,7 +235,7 @@ function getQuerySearchTaskById(): string
  */
 function getQuerySearchAllTasksByProject(): string
 {
-    return 'SELECT * FROM things_are_fine.tasks WHERE user_id = ? AND project_id = ?';
+    return 'SELECT * FROM tasks WHERE user_id = ? AND project_id = ?';
 }
 
 /**
@@ -243,7 +243,7 @@ function getQuerySearchAllTasksByProject(): string
  */
 function getQuerySearchTodayTasks(): string
 {
-    return 'SELECT * FROM things_are_fine.tasks WHERE completion_date = CURDATE() AND user_id = ?';
+    return 'SELECT * FROM tasks WHERE completion_date = CURDATE() AND user_id = ?';
 }
 
 /**
@@ -251,7 +251,7 @@ function getQuerySearchTodayTasks(): string
  */
 function getQuerySearchTodayTasksByProject(): string
 {
-    return 'SELECT * FROM things_are_fine.tasks WHERE completion_date = CURDATE() AND user_id = ? AND project_id = ?';
+    return 'SELECT * FROM tasks WHERE completion_date = CURDATE() AND user_id = ? AND project_id = ?';
 }
 
 /**
@@ -259,7 +259,7 @@ function getQuerySearchTodayTasksByProject(): string
  */
 function getQuerySearchTomorrowTasks(): string
 {
-    return 'SELECT * FROM things_are_fine.tasks WHERE completion_date = DATE_ADD(CURDATE(), INTERVAL 1 DAY) AND user_id = ?';
+    return 'SELECT * FROM tasks WHERE completion_date = DATE_ADD(CURDATE(), INTERVAL 1 DAY) AND user_id = ?';
 }
 
 /**
@@ -267,7 +267,7 @@ function getQuerySearchTomorrowTasks(): string
  */
 function getQuerySearchTomorrowTasksByProject(): string
 {
-    return 'SELECT * FROM things_are_fine.tasks WHERE completion_date = DATE_ADD(CURDATE(), INTERVAL 1 DAY) AND user_id = ? AND project_id = ?';
+    return 'SELECT * FROM tasks WHERE completion_date = DATE_ADD(CURDATE(), INTERVAL 1 DAY) AND user_id = ? AND project_id = ?';
 }
 
 /**
@@ -275,7 +275,7 @@ function getQuerySearchTomorrowTasksByProject(): string
  */
 function getQuerySearchOverdueTasks(): string
 {
-    return 'SELECT * FROM things_are_fine.tasks WHERE completion_date < CURDATE() AND user_id = ?';
+    return 'SELECT * FROM tasks WHERE completion_date < CURDATE() AND user_id = ?';
 }
 
 /**
@@ -283,7 +283,7 @@ function getQuerySearchOverdueTasks(): string
  */
 function getQuerySearchOverdueTasksByProject(): string
 {
-    return 'SELECT * FROM things_are_fine.tasks WHERE completion_date < CURDATE() AND user_id = ? AND project_id = ?';
+    return 'SELECT * FROM tasks WHERE completion_date < CURDATE() AND user_id = ? AND project_id = ?';
 }
 
 /** Возвращает всю информацию об одном пользователе по Email
@@ -315,7 +315,7 @@ function getUserDataById(mysqli $con, string $id): array
  */
 function getQueryGetNotReadyTasks(): string
 {
-    return 'SELECT * FROM things_are_fine.tasks WHERE status = ? AND completion_date = CURDATE()';
+    return 'SELECT * FROM tasks WHERE status = ? AND completion_date = CURDATE()';
 }
 
 /**
@@ -324,5 +324,5 @@ function getQueryGetNotReadyTasks(): string
  */
 function getQueryGetEmailsForUsers(): string
 {
-    return 'SELECT name ,email FROM things_are_fine.users WHERE id = ?';
+    return 'SELECT name ,email FROM users WHERE id = ?';
 }

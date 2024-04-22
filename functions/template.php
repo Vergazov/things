@@ -110,7 +110,7 @@ function isTaskImportant(string|null $date): bool
  * @return mixed Данные из $_POST массива по переданному ключу
  */
 
-function getPostVal(string $name): mixed
+function getPostVal(string $name): string
 {
     return $_POST[$name] ?? "";
 }
@@ -132,7 +132,7 @@ function getAbsolutePath(string $file): string
  * Отладочный вывод. Принимает один параметр который будет выведен на экран
  * @param $data . Параметр который будет выведен на экран
  */
-function dd($data)
+function dd($data): void
 {
     echo '<pre>';
     print_r($data);
