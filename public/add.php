@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $format = ['date'];
     $range = ['date'];
 
-    $newTask = filter_input_array(INPUT_POST,[
+    $newTask = filter_input_array(INPUT_POST, [
         'name' => FILTER_DEFAULT,
         'project' => FILTER_DEFAULT,
         'date' => FILTER_DEFAULT
@@ -27,7 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (in_array($key, $required, true) && isFilled($key) === false) {
             $errors[$key] = "Заполните поле $key";
         }
-        if (in_array($key, $exists, true) && empty($errors[$key]) && isProjExistsById($con, $key, $currentUserId) === false) {
+        if (in_array($key, $exists, true) && empty($errors[$key]) && isProjExistsById($con, $key,
+                $currentUserId) === false) {
             $errors[$key] = "Такого проекта не существует";
         }
         if (in_array($key, $format, true) && empty($errors[$key]) && isDateFormatValid($key) === false) {
@@ -52,19 +53,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($errors)) {
 
-        if(empty($newTask['date'])){
+        if (empty($newTask['date'])) {
             $newTask['date'] = null;
         }
 
         $stmt = db_get_prepare_stmt(
             $con,
-            getQueryAddTask(),[
-                $newTask['name'],
-                $fileUrl,
-                $newTask['date'],
-                $currentUserId,
-                $newTask['project']
-            ]);
+            getQueryAddTask(), [
+            $newTask['name'],
+            $fileUrl,
+            $newTask['date'],
+            $currentUserId,
+            $newTask['project']
+        ]);
 
         $res = mysqli_stmt_execute($stmt);
         if ($res) {

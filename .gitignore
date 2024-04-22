@@ -3,3 +3,4 @@
 /uploads/*
 /vendor/
 config.php
+public/php-errors.log
